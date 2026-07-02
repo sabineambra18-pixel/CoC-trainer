@@ -65,6 +65,139 @@ CONTAINERS = {
                            "Evacuated stainless canister for TO-15 / APH air sampling."),
 }
 
+# Plain-English "what usually goes in this container" (shown on a correct answer)
+CONTAINER_CONTENTS = {
+    "soil_clear_jars":
+        "Scoops of soil or other solids. Clear glass is fine for metals and "
+        "general soil tests that don't break down in light.",
+    "soil_amber_jars":
+        "Soil for light-sensitive tests — oil/petroleum, semi-volatiles, PCBs. "
+        "The amber glass blocks light so the sample doesn't change before testing.",
+    "soil_voa_vials":
+        "Small plugs of soil for volatile chemicals (gasoline-type vapors). They "
+        "come pre-filled with methanol or water to lock the vapors in the moment "
+        "you add the soil.",
+    "pl_asis_bottles":
+        "Water. Plain plastic bottles for general water chemistry, and — with the "
+        "right preservative already added — for metals, nutrients, and cyanide.",
+    "amber_glass_1l":
+        "About a liter of water for extractable organics — pesticides, herbicides, "
+        "PCBs and similar. Amber glass protects the light-sensitive compounds.",
+    "amber_boston_round":
+        "A small pour of water for tests like TOC. Amber glass again for light "
+        "protection.",
+    "amber_voa_60ml":
+        "Water for light-sensitive volatile-type analyses (e.g., 1,4-dioxane). "
+        "Amber vial with a septum cap, filled to the top with no air bubble.",
+    "clear_voa_40ml":
+        "Water for volatile chemicals when light isn't a concern. Small septum-cap "
+        "vial filled right to the top — zero headspace, no bubble.",
+    "hcl_vials_40ml":
+        "The same 40 mL water VOA vial, but pre-dosed with a little hydrochloric "
+        "acid to hold the volatiles (EPA 524). Fill with no bubble.",
+    "bacteria_thio":
+        "Drinking water for bacteria tests. Sterile bottle with a dab of sodium "
+        "thiosulfate (the blue dot) that neutralizes chlorine so it stops killing "
+        "bacteria before the lab can count them.",
+    "bacteria_asis":
+        "Water for bacteria tests when there's no chlorine to worry about. Sterile "
+        "bottle, nothing added.",
+    "summa_canister":
+        "Air. An evacuated stainless-steel canister that slowly pulls in an air "
+        "sample over the sampling period (e.g., 24 hours) through a flow controller.",
+}
+
+# Plain-English "what is this test and why would they run it" (shown when correct)
+ANALYSIS_INFO = {
+    "EPA 504.1  EDB / DBCP":
+        "Two old farm fumigant chemicals (EDB and DBCP) that can seep into "
+        "groundwater. Tested because they're linked to cancer.",
+    "EPA 508  Chlorinated Pesticides":
+        "Older bug-killing pesticides like DDT and chlordane. Checked in water "
+        "because they linger for years and are toxic.",
+    "EPA 515  Chlorinated Herbicides":
+        "Weed-killer chemicals (like 2,4-D). Runoff from lawns and farms can carry "
+        "them into water supplies, so drinking water is checked.",
+    "EPA 524.2  Volatile Organics":
+        "Solvents and fuel chemicals that evaporate easily (benzene, TCE). Common "
+        "near gas stations and dry cleaners and harmful to drink or breathe.",
+    "EPA 525.2  SVOCs / Pesticides":
+        "Heavier organic chemicals and pesticides. A broad screen to check drinking "
+        "water for a range of contaminants.",
+    "EPA 531.1  Carbamates":
+        "A family of crop pesticides. Tested in water because they can harm the "
+        "nervous system.",
+    "EPA 547  Glyphosate":
+        "The weed killer in Roundup. Used heavily, so it's checked where it can wash "
+        "into water.",
+    "EPA 548.1  Endothall":
+        "A herbicide used to kill weeds in ponds and lakes — it goes straight into "
+        "water, so water is tested for it.",
+    "EPA 549.2  Diquat / Paraquat":
+        "Two strong weed killers that are toxic even in small amounts, so water is "
+        "screened for them.",
+    "HAA5  Haloacetic Acids":
+        "Byproducts formed when chlorine used to disinfect water reacts with natural "
+        "matter. Watched because long-term exposure is a health concern.",
+    "Total Organic Carbon (TOC)":
+        "A measure of how much carbon-based material is in the water. Not a poison "
+        "itself, but high levels feed bacteria and form disinfection byproducts.",
+    "Phenolics / TOX":
+        "Pollution-indicator chemicals often from industrial discharge. Tested to "
+        "flag contamination.",
+    "1,4-Dioxane":
+        "An industrial solvent additive and stubborn groundwater contaminant. Hard "
+        "to remove and a suspected carcinogen, so it's watched closely.",
+    "Total Metals (EPA 200.8)":
+        "Metals like lead, arsenic, and chromium. Some are toxic at low levels and "
+        "can leach from pipes, soil, or industry.",
+    "Total Cyanide":
+        "Cyanide from industrial or mining waste — highly toxic, so drinking water "
+        "is checked for it.",
+    "Nutrients (Ammonia / TKN / TP)":
+        "Nitrogen and phosphorus. Too much causes algae blooms and can signal sewage "
+        "or fertilizer pollution.",
+    "Nitrate / Nitrite":
+        "Nitrogen from fertilizer or septic systems. High nitrate is dangerous for "
+        "infants ('blue baby'), so wells are tested.",
+    "Gen Chem (Alk / Hardness / Cl / SO4)":
+        "Basic water-quality numbers — hardness, acidity buffer, and salts. Used to "
+        "judge overall quality and treatment needs.",
+    "VOCs (EPA 8260)":
+        "Volatile solvents and fuel chemicals in soil. Tested at spill and industrial "
+        "sites because they evaporate and spread through the ground.",
+    "SVOCs (EPA 8270)":
+        "Heavier organic chemicals in soil, including tar/soot compounds. Checked at "
+        "contaminated sites to see what's in the dirt.",
+    "PAHs (EPA 8270-SIM)":
+        "Tar- and soot-type chemicals from burning fuel, asphalt, and oil. Tested "
+        "because several cause cancer.",
+    "Pesticides / PCBs (8081 / 8082)":
+        "Old pesticides (like DDT) and PCBs — banned oils once used in electrical "
+        "gear. Tested in soil because they stick around for decades and are toxic.",
+    "TPH / EPH (petroleum)":
+        "Basically 'how much oil or fuel is in this dirt.' Tested at gas stations, "
+        "tanks, and spill sites.",
+    "RCRA-8 Metals":
+        "Eight regulated toxic metals (arsenic, lead, mercury, and more). Tested to "
+        "see if soil is hazardous and how it must be handled.",
+    "Gen Soil (pH / Moisture / Solids)":
+        "Basic soil properties like acidity and water content — background info used "
+        "to make sense of the other results.",
+    "Total Coliform / E. coli (chlorinated)":
+        "Checks treated water for coliform and E. coli — bacteria that signal waste "
+        "contamination that could make people sick.",
+    "Total Coliform / E. coli (non-chlorinated)":
+        "Same bacteria safety check for water that isn't chlorinated, like a private "
+        "well — confirms it's safe to drink.",
+    "TO-15  VOCs in Air":
+        "Volatile chemicals in indoor or soil-gas air. Tested to see if vapors from "
+        "contaminated soil or groundwater are seeping into a building.",
+    "APH  Air-Phase Hydrocarbons":
+        "Petroleum-type vapors in air. Tested for vapor intrusion from fuel "
+        "contamination.",
+}
+
 ANALYSES = [
     ("EPA 504.1  EDB / DBCP",            "Water", "AS IS",   "clear_voa_40ml"),
     ("EPA 508  Chlorinated Pesticides",  "Water", "AS IS",   "amber_glass_1l"),
@@ -339,19 +472,93 @@ def make_options(correct_key, air):
     pool = [k for k in CONTAINERS if k != correct_key]
     if not air:
         pool = [k for k in pool if k != "summa_canister"]
-    distractors = random.sample(pool, min(3, len(pool)))
+    distractors = random.sample(pool, min(2, len(pool)))   # 2 distractors -> 3 options
     opts = [correct_key] + distractors
     random.shuffle(opts)
     return opts
+
+
+def make_quiz_coc(scope, forced_idx):
+    """A small CoC whose rows are real analyses, with `forced_idx` placed at a
+    random row and flagged. Container/preservative columns are omitted so the
+    form can't give away the answer."""
+    pool = [i for i in scope_indices(scope) if i != forced_idx]
+    random.shuffle(pool)
+    others = pool[:random.randint(2, 3)]
+    order = others + [forced_idx]
+    random.shuffle(order)
+    base_date = dt.date.today() - dt.timedelta(days=random.randint(0, 20))
+    header = {
+        "customer": random.choice(COMPANIES), "project": random.choice(PROJECTS),
+        "sampled_by": random.choice(SAMPLERS), "date": base_date.strftime("%m/%d/%Y"),
+        "po": f"PO-{random.randint(1000, 9999)}",
+    }
+    rows, counts, check_n = [], {}, None
+    for pos, ai in enumerate(order, start=1):
+        aname, amx, _, _ = ANALYSES[ai]
+        pfx = random.choice(PREFIX.get(amx, ["S-"]))
+        counts[pfx] = counts.get(pfx, 0) + 1
+        t = (dt.datetime.combine(base_date, dt.time(8, 0))
+             + dt.timedelta(minutes=random.randint(0, 480)))
+        rows.append({"n": pos, "sample_id": f"{pfx}{counts[pfx]:02d}", "matrix": amx,
+                     "time": t.strftime("%H:%M"), "analysis": aname,
+                     "checked": ai == forced_idx})
+        if ai == forced_idx:
+            check_n = pos
+    return {"header": header, "rows": rows}, check_n
+
+
+def render_quiz_coc(coc):
+    h = coc["header"]
+    body = ""
+    for r in coc["rows"]:
+        hi = "background:#fdf1c4;" if r["checked"] else ""
+        chk = ("<span style='color:#2f6f44;font-weight:900'>&#10003;</span>"
+               if r["checked"] else "")
+        body += (f"<tr style='{hi}'>"
+                 + _cell("", chk)
+                 + _cell("#", r["n"])
+                 + _cell("Sample ID", r["sample_id"], "ent al")
+                 + _cell("Matrix", r["matrix"])
+                 + _cell("Time", r["time"], "ent")
+                 + _cell("Analysis Request", r["analysis"], "ent al")
+                 + "</tr>")
+    cols = ("<th>&#10003;</th><th>#</th><th>Client Sample ID</th><th>Matrix</th>"
+            "<th>Time<br>Sampled</th><th>Analysis Request</th>")
+    return f"""{COC_CSS}
+<div class="pcoc">
+  <div class="top">
+    <div class="brand">PHOENIX<small>Environmental Laboratories, Inc.</small>
+      <div class="addr">587 East Middle Turnpike, Manchester, CT 06040</div></div>
+    <div><div class="title">CHAIN OF CUSTODY RECORD<small>CT / MA / RI</small></div>
+      <div class="phone">Client Services (860)&nbsp;645-1102</div></div>
+    <div class="rt">Page 1 of 1</div>
+  </div>
+  <div class="info">
+    <div><span class="lab">Customer:</span> <span class="val">{h['customer']}</span></div>
+    <div><span class="lab">Project:</span> <span class="val">{h['project']}</span></div>
+    <div><span class="lab">Project P.O.:</span> <span class="val">{h['po']}</span></div>
+    <div><span class="lab">Sampled by:</span> <span class="val">{h['sampled_by']}</span></div>
+    <div><span class="lab">Date:</span> <span class="val">{h['date']}</span></div>
+    <div></div>
+  </div>
+  <div class="tablewrap">
+    <table class="grid"><thead><tr>{cols}</tr></thead><tbody>{body}</tbody></table>
+  </div>
+  <div class="foot">Grab the container for the &#10003; highlighted line.</div>
+</div>
+"""
 
 
 def new_question(scope):
     exclude = st.session_state.qcur["idx"] if st.session_state.qcur else None
     idx = pick_next(scope, exclude)
     air = ANALYSES[idx][1] == "Air"
+    coc, check_n = make_quiz_coc(scope, idx)
     st.session_state.qnum += 1
     st.session_state.qcur = {"idx": idx, "options": make_options(ANALYSES[idx][3], air),
-                             "answered": False, "chosen": None, "nonce": st.session_state.qnum}
+                             "answered": False, "chosen": None, "nonce": st.session_state.qnum,
+                             "coc": coc, "check_n": check_n}
 
 
 # --------------------------------------------------------------------------- #
@@ -413,26 +620,10 @@ if mode == "🎲 CoC Generator":
 
 # ============================== QUIZ MODE =================================== #
 else:
-    st.caption("Which container do you grab? Unseen pairings come first; the ones "
-               "you miss come back more often.")
-    scope = st.selectbox("Drill", MATRICES, key="qscope")
-
+    scope = st.session_state.get("qscope", "All")
     idxs = scope_indices(scope)
     stats = st.session_state.qstats
     score = st.session_state.qscore
-    seen = sum(1 for i in idxs if stats[i]["seen"] > 0)
-    review = sum(1 for i in idxs if stats[i]["wrong"] > 0)
-    acc = (score["correct"] / score["total"] * 100) if score["total"] else 0
-
-    m1, m2, m3, m4 = st.columns(4)
-    m1.metric("Score", f"{score['correct']}/{score['total']}")
-    m2.metric("Accuracy", f"{acc:.0f}%")
-    m3.metric("Streak", st.session_state.qstreak, f"best {st.session_state.qbest}",
-              delta_color="off")
-    m4.metric("Seen", f"{seen}/{len(idxs)}")
-    st.progress(seen / len(idxs) if idxs else 0,
-                text=f"Coverage — {seen}/{len(idxs)} pairings seen"
-                     + (f" · {review} to review" if review else ""))
 
     # make sure there's a question in the current scope
     if st.session_state.qcur is None or st.session_state.qcur["idx"] not in idxs:
@@ -440,38 +631,52 @@ else:
     q = st.session_state.qcur
     name, amx, pres, correct_key = ANALYSES[q["idx"]]
 
-    st.markdown(
-        f"<div style='background:#fffdf8;border:2px solid #5f1a1c;border-radius:8px;"
-        f"padding:12px 14px;margin:6px 0 10px;font-family:Georgia,serif;'>"
-        f"<div style='font-size:11px;color:#8a7f72;letter-spacing:.05em'>"
-        f"CoC LINE &middot; {amx.upper()}</div>"
-        f"<div style='font-size:19px;color:#14346b;font-weight:700;margin-top:2px'>{name}</div>"
-        f"<div style='font-size:13px;color:#5f1a1c;margin-top:4px'>"
-        f"Which container do you grab?</div></div>", unsafe_allow_html=True)
+    # a real CoC with one line checked off (answer columns hidden)
+    st.markdown(render_quiz_coc(q["coc"]), unsafe_allow_html=True)
+    st.markdown(f"#### Which container for the ✓ line — **{name}**?")
 
     if not q["answered"]:
-        for i, ckey in enumerate(q["options"]):
-            if st.button(CONTAINERS[ckey][0], key=f"opt{q['nonce']}_{i}",
-                         use_container_width=True):
-                q["answered"] = True
-                q["chosen"] = ckey
-                stats[q["idx"]]["seen"] += 1
-                score["total"] += 1
-                if ckey == correct_key:
-                    score["correct"] += 1
-                    st.session_state.qstreak += 1
-                    st.session_state.qbest = max(st.session_state.qbest,
-                                                 st.session_state.qstreak)
+        cols = st.columns(len(q["options"]))
+        for i, (col, ckey) in enumerate(zip(cols, q["options"])):
+            with col:
+                p = img_path(ckey)
+                if p:
+                    st.image(p, use_container_width=True)
                 else:
-                    stats[q["idx"]]["wrong"] += 1
-                    st.session_state.qstreak = 0
-                st.rerun()
+                    st.markdown(
+                        "<div style='height:150px;display:flex;align-items:center;"
+                        "justify-content:center;border:1px solid #e4ddce;border-radius:8px;"
+                        "background:#faf6ee;font-size:40px'>🛢️</div>",
+                        unsafe_allow_html=True)
+                if st.button(CONTAINERS[ckey][0], key=f"opt{q['nonce']}_{i}",
+                             use_container_width=True):
+                    q["answered"] = True
+                    q["chosen"] = ckey
+                    stats[q["idx"]]["seen"] += 1
+                    score["total"] += 1
+                    if ckey == correct_key:
+                        score["correct"] += 1
+                        st.session_state.qstreak += 1
+                        st.session_state.qbest = max(st.session_state.qbest,
+                                                     st.session_state.qstreak)
+                    else:
+                        stats[q["idx"]]["wrong"] += 1
+                        st.session_state.qstreak = 0
+                    st.rerun()
     else:
         right = q["chosen"] == correct_key
         if right:
             st.success("✅ Correct!")
         else:
             st.error(f"❌ You picked {CONTAINERS[q['chosen']][0]}")
+        # plain-English "what this test is and why they run it"
+        st.markdown(
+            f"<div style='background:#eef2f8;border-left:4px solid #14346b;"
+            f"border-radius:6px;padding:10px 12px;margin:6px 0;font-size:14px;"
+            f"color:#14346b !important'>"
+            f"<b style='color:#0e2550'>{name} —</b> "
+            f"<span style='color:#22314d'>{ANALYSIS_INFO.get(name, '')}</span></div>",
+            unsafe_allow_html=True)
         cname, cfn, cdesc = CONTAINERS[correct_key]
         st.markdown(f"**Answer: {cname}**")
         st.markdown("Preservative: " + dot_html(pres), unsafe_allow_html=True)
@@ -480,10 +685,23 @@ else:
             st.image(p, use_container_width=True)
         else:
             st.info("📷 No photo on file — " + cdesc)
-        st.caption(cdesc)
+        # plain-English "what usually goes in this container"
+        st.markdown(
+            f"<div style='background:#eef5ee;border-left:4px solid #2f6f44;"
+            f"border-radius:6px;padding:10px 12px;margin-top:6px;font-size:14px;"
+            f"color:#1f3a28 !important'>"
+            f"<b style='color:#1d5c33'>What usually goes in it:</b> "
+            f"<span style='color:#25402e'>{CONTAINER_CONTENTS[correct_key]}</span></div>",
+            unsafe_allow_html=True)
         if st.button("Next question →", use_container_width=True, type="primary"):
             new_question(scope)
             st.rerun()
 
     st.divider()
-    st.button("↺ Reset score & progress", on_click=reset_quiz)
+    b1, b2 = st.columns([1, 1])
+    with b1:
+        st.selectbox("Drill (matrix)", MATRICES, key="qscope")
+    with b2:
+        st.write("")
+        st.button("↺ Reset score & progress", on_click=reset_quiz,
+                  use_container_width=True)
