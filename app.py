@@ -28,6 +28,7 @@ PRESERVATIVE_DOT = {
     "H2SO4":     ("#f2c200", "#333333"),
     "HCL":       ("#8f7fd4", "#ffffff"),
     "NAOH":      ("#1f2f6e", "#ffffff"),
+    "NaOH/Zinc Acetate": ("#1f2f6e", "#ffffff"),
     "Na2S2O3":   ("#3aa0e0", "#ffffff"),
     "NAHSO4":    ("#b0a99a", "#333333"),
     "H3PO4":     ("#b0a99a", "#333333"),
@@ -35,6 +36,7 @@ PRESERVATIVE_DOT = {
     "C6H7KO7":   ("#b0a99a", "#333333"),
     "AA,K Citrate,EDTA": ("#b0a99a", "#333333"),
     "Methanol / DI Water": ("#8a8a8a", "#ffffff"),
+    "Methanol": ("#8a8a8a", "#ffffff"),
     "None (Summa vacuum)": ("#cfcfcf", "#333333"),
 }
 
@@ -68,11 +70,12 @@ CONTAINERS = {
 # Plain-English "what usually goes in this container" (shown on a correct answer)
 CONTAINER_CONTENTS = {
     "soil_clear_jars":
-        "Scoops of soil or other solids. Clear glass is fine for metals and "
-        "general soil tests that don't break down in light.",
+        "Phoenix's go-to 4 oz clear glass jar for most soil tests — metals, "
+        "semi-volatiles, pesticides/PCBs, petroleum, and general soil chemistry. "
+        "Pack it full with as little air as possible.",
     "soil_amber_jars":
-        "Soil for light-sensitive tests — oil/petroleum, semi-volatiles, PCBs. "
-        "The amber glass blocks light so the sample doesn't change before testing.",
+        "Amber glass soil jar used for certain light-sensitive petroleum work "
+        "(like Massachusetts EPH). The dark glass keeps light out.",
     "soil_voa_vials":
         "Small plugs of soil for volatile chemicals (gasoline-type vapors). They "
         "come pre-filled with methanol or water to lock the vapors in the moment "
@@ -109,155 +112,218 @@ CONTAINER_CONTENTS = {
 
 # Plain-English "what is this test and why would they run it" (shown when correct)
 ANALYSIS_INFO = {
-    "EPA 504.1  EDB / DBCP":
-        "Two old farm fumigant chemicals (EDB and DBCP) that can seep into "
-        "groundwater. Tested because they're linked to cancer.",
-    "EPA 508  Chlorinated Pesticides":
-        "Older bug-killing pesticides like DDT and chlordane. Checked in water "
-        "because they linger for years and are toxic.",
-    "EPA 515  Chlorinated Herbicides":
-        "Weed-killer chemicals (like 2,4-D). Runoff from lawns and farms can carry "
-        "them into water supplies, so drinking water is checked.",
-    "EPA 524.2  Volatile Organics":
-        "Solvents and fuel chemicals that evaporate easily (benzene, TCE). Common "
-        "near gas stations and dry cleaners and harmful to drink or breathe.",
-    "EPA 525.2  SVOCs / Pesticides":
-        "Heavier organic chemicals and pesticides. A broad screen to check drinking "
-        "water for a range of contaminants.",
-    "EPA 531.1  Carbamates":
-        "A family of crop pesticides. Tested in water because they can harm the "
-        "nervous system.",
-    "EPA 547  Glyphosate":
-        "The weed killer in Roundup. Used heavily, so it's checked where it can wash "
-        "into water.",
-    "EPA 548.1  Endothall":
-        "A herbicide used to kill weeds in ponds and lakes — it goes straight into "
-        "water, so water is tested for it.",
-    "EPA 549.2  Diquat / Paraquat":
-        "Two strong weed killers that are toxic even in small amounts, so water is "
-        "screened for them.",
-    "HAA5  Haloacetic Acids":
-        "Byproducts formed when chlorine used to disinfect water reacts with natural "
-        "matter. Watched because long-term exposure is a health concern.",
-    "Total Organic Carbon (TOC)":
-        "A measure of how much carbon-based material is in the water. Not a poison "
-        "itself, but high levels feed bacteria and form disinfection byproducts.",
-    "Phenolics / TOX":
-        "Pollution-indicator chemicals often from industrial discharge. Tested to "
-        "flag contamination.",
-    "1,4-Dioxane":
-        "An industrial solvent additive and stubborn groundwater contaminant. Hard "
-        "to remove and a suspected carcinogen, so it's watched closely.",
-    "Total Metals (EPA 200.8)":
-        "Metals like lead, arsenic, and chromium. Some are toxic at low levels and "
-        "can leach from pipes, soil, or industry.",
+    "Volatiles (VOC, EPA 8260/624)":
+        "Solvents and fuel chemicals that evaporate easily (benzene, TCE); common at gas stations and dry cleaners and harmful to drink or breathe.",
+    "1,4-Dioxane (by 8260)":
+        "A stubborn industrial solvent additive found in groundwater; the 8260 version is run in acid-preserved VOA vials.",
+    "EDB / DBCP":
+        "Two old farm fumigants linked to cancer that can seep into groundwater.",
+    "Trihalomethanes (THMs)":
+        "Byproducts of chlorinating water; watched because long-term exposure is a health concern.",
+    "TPH-GRO / VPH (gasoline range)":
+        "Gasoline-range petroleum in water; volatile, so it goes in acid-preserved VOA vials.",
+    "1,4-Dioxane (low level, 522/8270)":
+        "The trace-level 1,4-dioxane method; needs NaHSO4 preservative and goes in an 8 oz amber glass bottle, NOT a VOA vial.",
+    "Phenolics":
+        "Industrial pollution-indicator chemicals; acid-preserved in amber glass.",
+    "TOC (Total Organic Carbon)":
+        "How much carbon-based material is in the water; high levels feed bacteria and form disinfection byproducts.",
+    "TOX":
+        "Total organic halogens — a broad flag for chlorinated-organic contamination.",
+    "Haloacetic Acids (HAA5)":
+        "Disinfection byproducts formed when chlorine reacts with natural matter; a health concern over time.",
+    "Semi-Volatiles (SVOC, 8270)":
+        "Heavier organic pollutants including PAHs; a broad screen at contaminated sites.",
+    "Pesticides":
+        "Bug-killing chemicals that can wash into water and linger.",
+    "Herbicides":
+        "Weed-killer chemicals from lawns and farms that can reach water supplies.",
+    "PCBs":
+        "Banned industrial oils that persist for decades and are toxic.",
+    "EPH (extractable petroleum)":
+        "Diesel/oil-range petroleum in water; acid-preserved and collected in amber liter bottles.",
+    "ETPH / TPH-DRO (diesel range)":
+        "Diesel-range petroleum measure for oil/fuel contamination.",
+    "Oil & Grease":
+        "Total oily material in water, often from industrial or wastewater discharge.",
+    "Total Metals":
+        "Metals like lead and arsenic that can leach from pipes, soil, or industry; acid-preserved.",
+    "Mercury":
+        "A highly toxic metal tracked separately; acid-preserved.",
+    "Hardness":
+        "How 'hard' the water is (calcium/magnesium); acid-preserved for the metals measurement.",
     "Total Cyanide":
-        "Cyanide from industrial or mining waste — highly toxic, so drinking water "
-        "is checked for it.",
-    "Nutrients (Ammonia / TKN / TP)":
-        "Nitrogen and phosphorus. Too much causes algae blooms and can signal sewage "
-        "or fertilizer pollution.",
-    "Nitrate / Nitrite":
-        "Nitrogen from fertilizer or septic systems. High nitrate is dangerous for "
-        "infants ('blue baby'), so wells are tested.",
-    "Gen Chem (Alk / Hardness / Cl / SO4)":
-        "Basic water-quality numbers — hardness, acidity buffer, and salts. Used to "
-        "judge overall quality and treatment needs.",
-    "VOCs (EPA 8260)":
-        "Volatile solvents and fuel chemicals in soil. Tested at spill and industrial "
-        "sites because they evaporate and spread through the ground.",
-    "SVOCs (EPA 8270)":
-        "Heavier organic chemicals in soil, including tar/soot compounds. Checked at "
-        "contaminated sites to see what's in the dirt.",
-    "PAHs (EPA 8270-SIM)":
-        "Tar- and soot-type chemicals from burning fuel, asphalt, and oil. Tested "
-        "because several cause cancer.",
-    "Pesticides / PCBs (8081 / 8082)":
-        "Old pesticides (like DDT) and PCBs — banned oils once used in electrical "
-        "gear. Tested in soil because they stick around for decades and are toxic.",
-    "TPH / EPH (petroleum)":
-        "Basically 'how much oil or fuel is in this dirt.' Tested at gas stations, "
-        "tanks, and spill sites.",
-    "RCRA-8 Metals":
-        "Eight regulated toxic metals (arsenic, lead, mercury, and more). Tested to "
-        "see if soil is hazardous and how it must be handled.",
-    "Gen Soil (pH / Moisture / Solids)":
-        "Basic soil properties like acidity and water content — background info used "
-        "to make sense of the other results.",
-    "Total Coliform / E. coli (chlorinated)":
-        "Checks treated water for coliform and E. coli — bacteria that signal waste "
-        "contamination that could make people sick.",
-    "Total Coliform / E. coli (non-chlorinated)":
-        "Same bacteria safety check for water that isn't chlorinated, like a private "
-        "well — confirms it's safe to drink.",
-    "TO-15  VOCs in Air":
-        "Volatile chemicals in indoor or soil-gas air. Tested to see if vapors from "
-        "contaminated soil or groundwater are seeping into a building.",
-    "APH  Air-Phase Hydrocarbons":
-        "Petroleum-type vapors in air. Tested for vapor intrusion from fuel "
-        "contamination.",
+        "Highly toxic cyanide from industrial or mining waste; base-preserved with NaOH.",
+    "Ammonia":
+        "A nitrogen form from sewage or fertilizer; too much signals pollution.",
+    "Nitrogen, Total (TKN)":
+        "Total nitrogen measure; indicates sewage or fertilizer loading.",
+    "Phosphorus / Phosphate":
+        "Nutrient that fuels algae blooms; acid-preserved.",
+    "Nitrate/Nitrite (combined)":
+        "Nitrogen forms from fertilizer or septic systems; acid-preserved when run together.",
+    "Nitrate (alone)":
+        "High nitrate is dangerous for infants ('blue baby'), so wells are tested; no preservative.",
+    "Chloride / Sulfate":
+        "Common salts measured for general water quality.",
+    "Alkalinity":
+        "The water's acid-buffering capacity; a basic quality measure.",
+    "Total Suspended / Dissolved Solids":
+        "How much solid material is floating in or dissolved in the water.",
+    "Bacteria — Coliform / E. coli (chlorinated)":
+        "Safety test for waste contamination in chlorinated water; the thio bottle neutralizes chlorine so it stops killing bacteria before they're counted.",
+    "Bacteria — Coliform / E. coli (non-chlorinated)":
+        "Same safety test for water with no chlorine, like a private well; plain sterile bottle.",
+    "Soil Volatiles (VOC, 8260 / 5035)":
+        "Evaporating solvents and fuels in soil; captured in methanol and water VOA vials the instant you add the soil.",
+    "Soil TPH-GRO / VPH (methanol VOA)":
+        "Gasoline-range petroleum in soil; collected in methanol VOA vials to trap the vapors.",
+    "Soil Semi-Volatiles (SVOC, 8270)":
+        "Heavier organic pollutants in soil, including PAHs. Phoenix collects these in the 4 oz clear glass jar.",
+    "Soil Pesticides / PCBs":
+        "Old pesticides and banned PCB oils that persist in soil for decades; 4 oz clear glass jar.",
+    "Soil Herbicides":
+        "Weed-killer residues in soil; 4 oz clear glass jar.",
+    "Soil Metals":
+        "Toxic metals in soil that determine if it's hazardous and how it must be handled.",
+    "Soil EPH / TPH":
+        "Oil and fuel content in soil at spill and tank sites; 4 oz clear glass jar.",
+    "Soil EPH (Massachusetts)":
+        "The Massachusetts petroleum method — the one soil test Phoenix runs in an amber jar, to protect light-sensitive compounds.",
+    "Soil pH / Solids / General":
+        "Basic soil properties used as background for the other results.",
+    "TO-15 (VOCs in Air)":
+        "Volatile chemicals in indoor or soil-gas air; tests whether vapors from contamination are seeping into a building.",
+    "APH (Air-Phase Hydrocarbons)":
+        "Petroleum vapors in air, tested for vapor intrusion from fuel contamination.",
+    "TCLP Metals":
+        "Leaching test that checks whether a waste will release toxic metals (like lead) into groundwater at a landfill. 500 mL plastic.",
+    "TCLP Volatiles":
+        "Leaching test for volatile chemicals — decides if a waste is hazardous by how much VOC leaches out. 40 mL VOA vials.",
+    "TCLP Semi-Volatiles":
+        "Leaching test for heavier organics. 1 L amber glass.",
+    "TCLP Pesticides":
+        "Leaching test for pesticides. 1 L amber glass.",
+    "TCLP Herbicides":
+        "Leaching test for herbicides. 1 L amber glass.",
+    "Odor":
+        "A basic drinking-water check for smell; no preservative.",
+    "Turbidity":
+        "How cloudy the water is — a basic quality and treatment measure.",
+    "UV 254":
+        "A quick optical measure of organic material tied to disinfection-byproduct potential; 8 oz amber glass.",
+    "Sulfide":
+        "Rotten-egg sulfide in water; preserved with NaOH and zinc acetate to hold it.",
+    "Sulfite":
+        "A treatment-chemical residual measured quickly with no preservative.",
+    "Ortho-Phosphate":
+        "The dissolved form of phosphorus; a nutrient measure.",
+    "Volatile Fatty Acids":
+        "Acids that build up in digesters and wastewater; acid-preserved.",
+    "Dissolved / Settleable Solids":
+        "More solids measures for water quality; plastic, no preservative.",
+    "Soil Formaldehyde":
+        "Formaldehyde in soil; 4 oz clear glass jar.",
+    "Soil Age Dating (petroleum)":
+        "Lab 'fingerprinting' to estimate how old a petroleum release is; 4 oz glass jar.",
 }
 
+
 ANALYSES = [
-    ("EPA 504.1  EDB / DBCP",            "Water", "AS IS",   "clear_voa_40ml"),
-    ("EPA 508  Chlorinated Pesticides",  "Water", "AS IS",   "amber_glass_1l"),
-    ("EPA 515  Chlorinated Herbicides",  "Water", "AS IS",   "amber_glass_1l"),
-    ("EPA 524.2  Volatile Organics",     "Water", "HCL",     "hcl_vials_40ml"),
-    ("EPA 525.2  SVOCs / Pesticides",    "Water", "AA,K Citrate,EDTA", "amber_glass_1l"),
-    ("EPA 531.1  Carbamates",            "Water", "C6H7KO7", "amber_glass_1l"),
-    ("EPA 547  Glyphosate",              "Water", "Na2S2O3", "amber_glass_1l"),
-    ("EPA 548.1  Endothall",             "Water", "Na2S2O3", "amber_glass_1l"),
-    ("EPA 549.2  Diquat / Paraquat",     "Water", "Na2S2O3", "pl_asis_bottles"),
-    ("HAA5  Haloacetic Acids",           "Water", "NH4CL",   "amber_glass_1l"),
-    ("Total Organic Carbon (TOC)",       "Water", "H3PO4",   "amber_boston_round"),
-    ("Phenolics / TOX",                  "Water", "H2SO4",   "amber_glass_1l"),
-    ("1,4-Dioxane",                      "Water", "NAHSO4",  "amber_voa_60ml"),
-    ("Total Metals (EPA 200.8)",         "Water", "HNO3",    "pl_asis_bottles"),
-    ("Total Cyanide",                    "Water", "NAOH",    "pl_asis_bottles"),
-    ("Nutrients (Ammonia / TKN / TP)",   "Water", "H2SO4",   "pl_asis_bottles"),
-    ("Nitrate / Nitrite",                "Water", "AS IS",   "pl_asis_bottles"),
-    ("Gen Chem (Alk / Hardness / Cl / SO4)", "Water", "AS IS", "pl_asis_bottles"),
-    ("VOCs (EPA 8260)",                  "Soil", "Methanol / DI Water", "soil_voa_vials"),
-    ("SVOCs (EPA 8270)",                 "Soil", "AS IS",   "soil_amber_jars"),
-    ("PAHs (EPA 8270-SIM)",              "Soil", "AS IS",   "soil_amber_jars"),
-    ("Pesticides / PCBs (8081 / 8082)",  "Soil", "AS IS",   "soil_amber_jars"),
-    ("TPH / EPH (petroleum)",            "Soil", "AS IS",   "soil_amber_jars"),
-    ("RCRA-8 Metals",                    "Soil", "AS IS",   "soil_clear_jars"),
-    ("Gen Soil (pH / Moisture / Solids)","Soil", "AS IS",   "soil_clear_jars"),
-    ("Total Coliform / E. coli (chlorinated)",     "Bacteria", "Na2S2O3", "bacteria_thio"),
-    ("Total Coliform / E. coli (non-chlorinated)", "Bacteria", "AS IS",   "bacteria_asis"),
-    ("TO-15  VOCs in Air",               "Air", "None (Summa vacuum)", "summa_canister"),
-    ("APH  Air-Phase Hydrocarbons",      "Air", "None (Summa vacuum)", "summa_canister"),
+    ("Volatiles (VOC, EPA 8260/624)", "Water", "HCL", "hcl_vials_40ml"),
+    ("1,4-Dioxane (by 8260)", "Water", "HCL", "hcl_vials_40ml"),
+    ("EDB / DBCP", "Water", "AS IS", "clear_voa_40ml"),
+    ("Trihalomethanes (THMs)", "Water", "Na2S2O3", "clear_voa_40ml"),
+    ("TPH-GRO / VPH (gasoline range)", "Water", "HCL", "hcl_vials_40ml"),
+    ("1,4-Dioxane (low level, 522/8270)", "Water", "NAHSO4", "amber_boston_round"),
+    ("Phenolics", "Water", "H2SO4", "amber_boston_round"),
+    ("TOC (Total Organic Carbon)", "Water", "H3PO4", "amber_boston_round"),
+    ("TOX", "Water", "H2SO4", "amber_boston_round"),
+    ("Haloacetic Acids (HAA5)", "Water", "NH4CL", "amber_boston_round"),
+    ("Semi-Volatiles (SVOC, 8270)", "Water", "AS IS", "amber_glass_1l"),
+    ("Pesticides", "Water", "AS IS", "amber_glass_1l"),
+    ("Herbicides", "Water", "AS IS", "amber_glass_1l"),
+    ("PCBs", "Water", "AS IS", "amber_glass_1l"),
+    ("EPH (extractable petroleum)", "Water", "HCL", "amber_glass_1l"),
+    ("ETPH / TPH-DRO (diesel range)", "Water", "AS IS", "amber_glass_1l"),
+    ("Oil & Grease", "Water", "H2SO4", "amber_glass_1l"),
+    ("Total Metals", "Water", "HNO3", "pl_asis_bottles"),
+    ("Mercury", "Water", "HNO3", "pl_asis_bottles"),
+    ("Hardness", "Water", "HNO3", "pl_asis_bottles"),
+    ("Total Cyanide", "Water", "NAOH", "pl_asis_bottles"),
+    ("Ammonia", "Water", "H2SO4", "pl_asis_bottles"),
+    ("Nitrogen, Total (TKN)", "Water", "H2SO4", "pl_asis_bottles"),
+    ("Phosphorus / Phosphate", "Water", "H2SO4", "pl_asis_bottles"),
+    ("Nitrate/Nitrite (combined)", "Water", "H2SO4", "pl_asis_bottles"),
+    ("Nitrate (alone)", "Water", "AS IS", "pl_asis_bottles"),
+    ("Chloride / Sulfate", "Water", "AS IS", "pl_asis_bottles"),
+    ("Alkalinity", "Water", "AS IS", "pl_asis_bottles"),
+    ("Total Suspended / Dissolved Solids", "Water", "AS IS", "pl_asis_bottles"),
+    ("Bacteria — Coliform / E. coli (chlorinated)", "Bacteria", "Na2S2O3", "bacteria_thio"),
+    ("Bacteria — Coliform / E. coli (non-chlorinated)", "Bacteria", "AS IS", "bacteria_asis"),
+    ("Soil Volatiles (VOC, 8260 / 5035)", "Soil", "Methanol / DI Water", "soil_voa_vials"),
+    ("Soil TPH-GRO / VPH (methanol VOA)", "Soil", "Methanol", "soil_voa_vials"),
+    ("Soil Semi-Volatiles (SVOC, 8270)", "Soil", "AS IS", "soil_clear_jars"),
+    ("Soil Pesticides / PCBs", "Soil", "AS IS", "soil_clear_jars"),
+    ("Soil Herbicides", "Soil", "AS IS", "soil_clear_jars"),
+    ("Soil Metals", "Soil", "AS IS", "soil_clear_jars"),
+    ("Soil EPH / TPH", "Soil", "AS IS", "soil_clear_jars"),
+    ("Soil EPH (Massachusetts)", "Soil", "AS IS", "soil_amber_jars"),
+    ("Soil pH / Solids / General", "Soil", "AS IS", "soil_clear_jars"),
+    ("TO-15 (VOCs in Air)", "Air", "None (Summa vacuum)", "summa_canister"),
+    ("APH (Air-Phase Hydrocarbons)", "Air", "None (Summa vacuum)", "summa_canister"),
+    ("TCLP Metals", "TCLP", "AS IS", "pl_asis_bottles"),
+    ("TCLP Volatiles", "TCLP", "AS IS", "clear_voa_40ml"),
+    ("TCLP Semi-Volatiles", "TCLP", "AS IS", "amber_glass_1l"),
+    ("TCLP Pesticides", "TCLP", "AS IS", "amber_glass_1l"),
+    ("TCLP Herbicides", "TCLP", "AS IS", "amber_glass_1l"),
+    ("Odor", "Water", "AS IS", "pl_asis_bottles"),
+    ("Turbidity", "Water", "AS IS", "pl_asis_bottles"),
+    ("UV 254", "Water", "AS IS", "amber_boston_round"),
+    ("Sulfide", "Water", "NaOH/Zinc Acetate", "pl_asis_bottles"),
+    ("Sulfite", "Water", "AS IS", "pl_asis_bottles"),
+    ("Ortho-Phosphate", "Water", "AS IS", "pl_asis_bottles"),
+    ("Volatile Fatty Acids", "Water", "H2SO4", "pl_asis_bottles"),
+    ("Dissolved / Settleable Solids", "Water", "AS IS", "pl_asis_bottles"),
+    ("Soil Formaldehyde", "Soil", "AS IS", "soil_clear_jars"),
+    ("Soil Age Dating (petroleum)", "Soil", "AS IS", "soil_clear_jars"),
 ]
+
 
 CANISTERS = [("6.0 L", (3.0, 3.3), "24 hr"), ("1.4 L", (70, 80), "15 min")]
 
-COMPANIES = ["Castleton Environmental Geological Svcs", "Green Ledge Consulting",
-             "TerraProbe LLC", "BlueRock Geosciences", "Atlas Site Services Inc.",
-             "Northeast Enviro Group", "Granite State Drilling & Testing"]
-SAMPLERS  = ["J. Ferngren", "M. Alvarez", "T. Okafor", "S. Petrov", "R. Nguyen",
-             "D. Callahan", "K. Whitmore", "L. Bianchi"]
-PROJECTS  = ["Former Gas Station RI-04", "Elm St. Redevelopment", "Harbor Marine Terminal",
-             "Route 9 Widening", "Old Mill Brownfield", "Cedar Pond Landfill",
-             "Downtown Parcel B", "Riverside Housing Ph. II"]
-CITIES    = ["Providence, RI", "Manchester, CT", "Babylon, NY", "Worcester, MA",
-             "New Haven, CT", "Warwick, RI", "Springfield, MA"]
+COMPANIES = ["Acme Environmental Inc.", "Testco Labs LLC", "Sample Co. Consulting",
+             "Placeholder Geosciences", "Example Site Services", "Fictional Drilling Co.",
+             "Demo Environmental Group", "Anytown Testing LLC"]
+SAMPLERS  = ["Jane Sampler", "John Doe", "Sam Placeholder", "Alex Example", "Pat Tester",
+             "Chris Demo", "Jordan Sample", "Casey Fictional"]
+PROJECTS  = ["Sample Project A", "Example Site 1", "Demo Parcel B", "Test Location 2",
+             "Placeholder Redevelopment", "Fictional Brownfield", "Anytown Cleanup",
+             "Example Landfill"]
+CITIES    = ["100 Sample Rd, Anytown, ST 00000", "1 Example Ave, Testville, ST 00000",
+             "250 Placeholder St, Demo City, ST 00000", "42 Fictional Ln, Sampleton, ST 00000",
+             "500 Test Blvd, Exampleburg, ST 00000", "99 Demo Dr, Anytown, ST 00000",
+             "12 Mock St, Placeholderville, ST 00000"]
+
 PREFIX = {
     "Water":    ["MW-", "GW-", "B-", "TB-", "DUP-", "SW-", "TAP-"],
     "Soil":     ["SB-", "B-", "TP-", "SS-", "GP-"],
     "Bacteria": ["TAP-", "WELL-", "DW-", "KIT-"],
     "Air":      ["IA-", "SG-", "AA-", "SS-"],
+    "TCLP":     ["W-", "SB-", "B-", "TCLP-"],
 }
-MATRICES = ["All", "Water", "Soil", "Bacteria", "Air"]
+MATRICES = ["All", "Water", "Soil", "Bacteria", "TCLP", "Air"]
 
 
 def _pick_analyses(matrix, n):
-    pool = [a for a in ANALYSES if (matrix == "All" or a[1] == matrix)]
+    def in_scope(a):
+        return a[1] == matrix if matrix != "All" else a[1] != "Air"
+    pool = [a for a in ANALYSES if in_scope(a)]
     random.shuffle(pool)
     rows = []
     while len(rows) < n:
         if not pool:
-            pool = [a for a in ANALYSES if (matrix == "All" or a[1] == matrix)]
+            pool = [a for a in ANALYSES if in_scope(a)]
             random.shuffle(pool)
         rows.append(pool.pop())
     return rows
@@ -393,10 +459,8 @@ def render_coc_html(coc):
     return f"""{COC_CSS}
 <div class="pcoc">
   <div class="top">
-    <div class="brand">PHOENIX<small>Environmental Laboratories, Inc.</small>
-      <div class="addr">587 East Middle Turnpike, Manchester, CT 06040</div></div>
-    <div><div class="title">CHAIN OF CUSTODY RECORD<small>{h['form']}</small></div>
-      <div class="phone">Client Services (860)&nbsp;645-1102</div></div>
+    <div class="brand">PEL</div>
+    <div><div class="title">CHAIN OF CUSTODY RECORD<small>{h['form']}</small></div></div>
     <div class="rt">Page 1 of 1<br>Temp <b>{h['temp']} &deg;C</b><br>
       Cooler <b>{h['cooler']}</b> / <b>{h['coolant']}</b></div>
   </div>
@@ -416,6 +480,125 @@ def render_coc_html(coc):
   </div>
   <div class="foot">Auto-generated practice CoC &mdash; fictional project data.
     Container / preservative pairings follow the Phoenix reference binder.</div>
+</div>
+"""
+
+
+# --- full CT/MA/RI form with the real bottle-quantity columns -------------- #
+FULL_COLS = [
+    ("amber_oz",  "GL Amber<br>( ) oz"),
+    ("soil_voa",  "Soil VOA<br>Vials"),
+    ("soil_a",    "GL Soil<br>container"),
+    ("soil_b",    "GL Soil<br>container"),
+    ("voa40",     "40 mL<br>VOA Vial"),
+    ("amber1l",   "GL Amber<br>1000 mL"),
+    ("pl_asis",   "PL<br>As is"),
+    ("pl_h2so4",  "PL<br>H&#8322;SO&#8324;"),
+    ("pl_hno3",   "PL<br>HNO&#8323;"),
+    ("pl_naoh",   "PL<br>NaOH"),
+    ("bact_thio", "Bact.<br>w/thio"),
+    ("bact_asis", "Bact.<br>as is"),
+]
+
+
+def form_cell(row):
+    """Return (column_id, preservative_note) for how a customer fills this line."""
+    ck, pres = row["container_key"], row["preservative"]
+    if ck == "amber_boston_round":
+        note = pres if pres in ("H3PO4", "NAHSO4", "NH4CL") else pres
+        return "amber_oz", note
+    if ck == "soil_voa_vials":  return "soil_voa", "MeOH + H\u2082O"
+    if ck == "soil_clear_jars": return "soil_a", ""
+    if ck == "soil_amber_jars": return "soil_b", ""
+    if ck == "clear_voa_40ml":  return "voa40", ("Na\u2082SO\u2083" if pres == "Na2S2O3" else "As is")
+    if ck == "hcl_vials_40ml":  return "voa40", "HCL"
+    if ck == "amber_glass_1l":  return "amber1l", (pres if pres in ("HCL", "H2SO4") else "As is")
+    if ck == "pl_asis_bottles":
+        return {"AS IS": "pl_asis", "H2SO4": "pl_h2so4",
+                "HNO3": "pl_hno3", "NAOH": "pl_naoh",
+                "NaOH/Zinc Acetate": "pl_naoh"}.get(pres, "pl_asis"), ""
+    if ck == "bacteria_thio":   return "bact_thio", ""
+    if ck == "bacteria_asis":   return "bact_asis", ""
+    return None, ""
+
+
+FULL_CSS = """
+<style>
+.fcoc{font-family:Georgia,'Times New Roman',serif;color:#14346b;background:#fffdf8;
+      border:2px solid #5f1a1c;border-radius:4px;overflow:hidden;margin:4px 0 8px;}
+.fcoc *{box-sizing:border-box;}
+.fcoc .top{border-bottom:2px solid #5f1a1c;padding:8px 12px;display:flex;
+           justify-content:space-between;align-items:flex-start;gap:8px;}
+.fcoc .brand{font-size:20px;font-weight:700;color:#5f1a1c;}
+.fcoc .title{text-align:center;color:#5f1a1c;font-weight:700;font-size:14px;letter-spacing:.5px;}
+.fcoc .title small{display:block;font-size:10px;}
+.fcoc .rt{font-size:10px;color:#5f1a1c;text-align:right;}
+.fcoc .rt b{color:#14346b;}
+.fcoc .info{display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px 14px;padding:7px 12px;
+            border-bottom:2px solid #5f1a1c;font-size:12px;}
+.fcoc .lab{color:#5f1a1c;font-weight:700;}
+.fcoc .val{color:#14346b;border-bottom:1px dotted #b9a;}
+.fcoc .scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+.fcoc table{border-collapse:collapse;font-size:11px;min-width:900px;width:100%;}
+.fcoc th,.fcoc td{border:1px solid #c9b7a8;padding:3px 4px;text-align:center;color:#5f1a1c;}
+.fcoc thead th{background:#f3e9e3;border-color:#5f1a1c;font-size:10px;line-height:1.05;
+               vertical-align:bottom;}
+.fcoc th.lft,.fcoc td.lft{text-align:left;}
+.fcoc td.ent{color:#14346b;font-weight:600;}
+.fcoc td.bot{color:#14346b;font-weight:700;background:#fdf7ea;}
+.fcoc td.bot small{display:block;font-weight:600;color:#8a5a1a;font-size:9px;}
+.fcoc .foot{font-size:10px;color:#8a7f72;padding:6px 12px;border-top:1px solid #c9b7a8;
+            font-family:Arial,sans-serif;}
+</style>
+"""
+
+
+def render_full_coc_html(coc):
+    h = coc["header"]
+    head_bottle = "".join(f"<th>{lbl}</th>" for _, lbl in FULL_COLS)
+    body = ""
+    for r in coc["rows"]:
+        colid, note = form_cell(r)
+        cells = ""
+        for cid, _ in FULL_COLS:
+            if cid == colid:
+                extra = f"<small>{note}</small>" if note else ""
+                cells += f'<td class="bot">{r["qty"]}{extra}</td>'
+            else:
+                cells += "<td></td>"
+        body += (f'<tr><td>{r["n"]}</td>'
+                 f'<td class="lft ent">{r["sample_id"]}</td>'
+                 f'<td>{r["matrix"]}</td>'
+                 f'<td class="ent">{r["time"]}</td>'
+                 f'<td class="lft ent">{r["analysis"]}</td>'
+                 f'{cells}</tr>')
+    return f"""{FULL_CSS}
+<div class="fcoc">
+  <div class="top">
+    <div class="brand">PEL</div>
+    <div><div class="title">CHAIN OF CUSTODY RECORD<small>CT / MA / RI</small></div></div>
+    <div class="rt">Page 1 of 1<br>Temp <b>{h['temp']} &deg;C</b><br>
+      Cooler <b>{h['cooler']}</b> / <b>{h['coolant']}</b></div>
+  </div>
+  <div class="info">
+    <div><span class="lab">Customer:</span> <span class="val">{h['customer']}</span></div>
+    <div><span class="lab">Project:</span> <span class="val">{h['project']}</span></div>
+    <div><span class="lab">Project P.O.:</span> <span class="val">{h['po']}</span></div>
+    <div><span class="lab">Report to:</span> <span class="val">{h['report_to']}</span></div>
+    <div><span class="lab">Sampled by:</span> <span class="val">{h['sampled_by']}</span></div>
+    <div><span class="lab">Quote #:</span> <span class="val">{h['quote']}</span></div>
+  </div>
+  <div class="scroll">
+    <table>
+      <thead><tr>
+        <th>#</th><th class="lft">Client Sample ID</th><th>Matrix</th>
+        <th>Time<br>Sampled</th><th class="lft">Analysis Request</th>{head_bottle}
+      </tr></thead>
+      <tbody>{body}</tbody>
+    </table>
+  </div>
+  <div class="foot">Bottle quantities entered per line, the way the lab requires.
+    Swipe the grid sideways to see all container columns.</div>
 </div>
 """
 
@@ -492,47 +675,57 @@ def make_quiz_coc(scope, forced_idx):
         "customer": random.choice(COMPANIES), "project": random.choice(PROJECTS),
         "sampled_by": random.choice(SAMPLERS), "date": base_date.strftime("%m/%d/%Y"),
         "po": f"PO-{random.randint(1000, 9999)}",
+        "temp": f"{random.uniform(1.5, 5.9):.1f}", "cooler": random.choice(["Yes", "Yes", "No"]),
+        "coolant": random.choice(["ICE", "IPK", "ICE"]),
     }
     rows, counts, check_n = [], {}, None
     for pos, ai in enumerate(order, start=1):
-        aname, amx, _, _ = ANALYSES[ai]
+        aname, amx, apres, ackey = ANALYSES[ai]
         pfx = random.choice(PREFIX.get(amx, ["S-"]))
         counts[pfx] = counts.get(pfx, 0) + 1
         t = (dt.datetime.combine(base_date, dt.time(8, 0))
              + dt.timedelta(minutes=random.randint(0, 480)))
         rows.append({"n": pos, "sample_id": f"{pfx}{counts[pfx]:02d}", "matrix": amx,
                      "time": t.strftime("%H:%M"), "analysis": aname,
-                     "checked": ai == forced_idx})
+                     "preservative": apres, "container_key": ackey,
+                     "qty": random.randint(1, 3), "checked": ai == forced_idx})
         if ai == forced_idx:
             check_n = pos
     return {"header": header, "rows": rows}, check_n
 
 
-def render_quiz_coc(coc):
+def render_quiz_full(coc, reveal=False):
+    """Full CT/MA/RI form. Bottle columns are blank while answering; on reveal
+    the checked line's correct bottle cell gets filled in."""
     h = coc["header"]
+    head_bottle = "".join(f"<th>{lbl}</th>" for _, lbl in FULL_COLS)
     body = ""
     for r in coc["rows"]:
-        hi = "background:#fdf1c4;" if r["checked"] else ""
+        hi = ' style="background:#fdf1c4"' if r["checked"] else ""
         chk = ("<span style='color:#2f6f44;font-weight:900'>&#10003;</span>"
                if r["checked"] else "")
-        body += (f"<tr style='{hi}'>"
-                 + _cell("", chk)
-                 + _cell("#", r["n"])
-                 + _cell("Sample ID", r["sample_id"], "ent al")
-                 + _cell("Matrix", r["matrix"])
-                 + _cell("Time", r["time"], "ent")
-                 + _cell("Analysis Request", r["analysis"], "ent al")
-                 + "</tr>")
-    cols = ("<th>&#10003;</th><th>#</th><th>Client Sample ID</th><th>Matrix</th>"
-            "<th>Time<br>Sampled</th><th>Analysis Request</th>")
-    return f"""{COC_CSS}
-<div class="pcoc">
+        colid, note = form_cell(r)
+        cells = ""
+        for cid, _ in FULL_COLS:
+            if reveal and r["checked"] and cid == colid:
+                extra = f"<small>{note}</small>" if note else ""
+                cells += f'<td class="bot">{r["qty"]}{extra}</td>'
+            else:
+                cells += "<td></td>"
+        body += (f"<tr{hi}><td>{chk}</td><td>{r['n']}</td>"
+                 f"<td class='lft ent'>{r['sample_id']}</td>"
+                 f"<td>{r['matrix']}</td><td class='ent'>{r['time']}</td>"
+                 f"<td class='lft ent'>{r['analysis']}</td>{cells}</tr>")
+    foot = ("Here's how that line should look filled in \u2014 swipe to see the checked column."
+            if reveal else
+            "Grab the container for the &#10003; highlighted line. (Bottle columns blank on purpose.)")
+    return f"""{FULL_CSS}
+<div class="fcoc">
   <div class="top">
-    <div class="brand">PHOENIX<small>Environmental Laboratories, Inc.</small>
-      <div class="addr">587 East Middle Turnpike, Manchester, CT 06040</div></div>
-    <div><div class="title">CHAIN OF CUSTODY RECORD<small>CT / MA / RI</small></div>
-      <div class="phone">Client Services (860)&nbsp;645-1102</div></div>
-    <div class="rt">Page 1 of 1</div>
+    <div class="brand">PEL</div>
+    <div><div class="title">CHAIN OF CUSTODY RECORD<small>CT / MA / RI</small></div></div>
+    <div class="rt">Page 1 of 1<br>Temp <b>{h['temp']} &deg;C</b><br>
+      Cooler <b>{h['cooler']}</b> / <b>{h['coolant']}</b></div>
   </div>
   <div class="info">
     <div><span class="lab">Customer:</span> <span class="val">{h['customer']}</span></div>
@@ -542,10 +735,16 @@ def render_quiz_coc(coc):
     <div><span class="lab">Date:</span> <span class="val">{h['date']}</span></div>
     <div></div>
   </div>
-  <div class="tablewrap">
-    <table class="grid"><thead><tr>{cols}</tr></thead><tbody>{body}</tbody></table>
+  <div class="scroll">
+    <table>
+      <thead><tr>
+        <th>&#10003;</th><th>#</th><th class="lft">Client Sample ID</th><th>Matrix</th>
+        <th>Time<br>Sampled</th><th class="lft">Analysis Request</th>{head_bottle}
+      </tr></thead>
+      <tbody>{body}</tbody>
+    </table>
   </div>
-  <div class="foot">Grab the container for the &#10003; highlighted line.</div>
+  <div class="foot">{foot}</div>
 </div>
 """
 
@@ -598,7 +797,10 @@ if mode == "🎲 CoC Generator":
         st.session_state.key = key
     coc = st.session_state.coc
 
-    st.markdown(render_coc_html(coc), unsafe_allow_html=True)
+    if coc["matrix"] == "Air":
+        st.markdown(render_coc_html(coc), unsafe_allow_html=True)
+    else:
+        st.markdown(render_full_coc_html(coc), unsafe_allow_html=True)
     st.markdown("### Containers to grab")
     groups = {}
     for r in coc["rows"]:
@@ -632,8 +834,8 @@ else:
     name, amx, pres, correct_key = ANALYSES[q["idx"]]
 
     # a real CoC with one line checked off (answer columns hidden)
-    st.markdown(render_quiz_coc(q["coc"]), unsafe_allow_html=True)
-    st.markdown(f"#### Which container for the ✓ line — **{name}**?")
+    st.markdown(render_quiz_full(q["coc"], reveal=q["answered"]), unsafe_allow_html=True)
+    st.markdown(f"#### Which container for the ✓ line — **{name}** _({amx})_?")
 
     if not q["answered"]:
         cols = st.columns(len(q["options"]))
