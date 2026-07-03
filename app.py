@@ -290,6 +290,12 @@ ANALYSES = [
 ]
 
 
+
+# which containers each matrix actually uses (for same-matrix quiz distractors)
+CONTAINERS_BY_MATRIX = {}
+for _n, _mx, _p, _ck in ANALYSES:
+    CONTAINERS_BY_MATRIX.setdefault(_mx, set()).add(_ck)
+
 CANISTERS = [("6.0 L", (3.0, 3.3), "24 hr"), ("1.4 L", (70, 80), "15 min")]
 
 COMPANIES = ["Acme Environmental Inc.", "Testco Labs LLC", "Sample Co. Consulting",
@@ -651,11 +657,20 @@ def pick_next(scope, exclude=None):
     return choice
 
 
-def make_options(correct_key, air):
-    pool = [k for k in CONTAINERS if k != correct_key]
-    if not air:
-        pool = [k for k in pool if k != "summa_canister"]
-    distractors = random.sample(pool, min(2, len(pool)))   # 2 distractors -> 3 options
+def make_options(correct_key, matrix):
+    # prefer distractors from the SAME matrix so choices are all plausible
+    same = [k for k in CONTAINERS_BY_MATRIX.get(matrix, set()) if k != correct_key]
+    random.shuffle(same)
+    distractors = same[:2]
+    if len(distractors) < 2:  # matrices with few containers (bacteria, air) fill from the rest
+        pool = [k for k in CONTAINERS if k != correct_key and k not in distractors]
+        if matrix != "Air":
+            pool = [k for k in pool if k != "summa_canister"]
+        random.shuffle(pool)
+        for k in pool:
+            distractors.append(k)
+            if len(distractors) == 2:
+                break
     opts = [correct_key] + distractors
     random.shuffle(opts)
     return opts
@@ -752,10 +767,10 @@ def render_quiz_full(coc, reveal=False):
 def new_question(scope):
     exclude = st.session_state.qcur["idx"] if st.session_state.qcur else None
     idx = pick_next(scope, exclude)
-    air = ANALYSES[idx][1] == "Air"
+    matrix = ANALYSES[idx][1]
     coc, check_n = make_quiz_coc(scope, idx)
     st.session_state.qnum += 1
-    st.session_state.qcur = {"idx": idx, "options": make_options(ANALYSES[idx][3], air),
+    st.session_state.qcur = {"idx": idx, "options": make_options(ANALYSES[idx][3], matrix),
                              "answered": False, "chosen": None, "nonce": st.session_state.qnum,
                              "coc": coc, "check_n": check_n}
 
@@ -763,6 +778,213 @@ def new_question(scope):
 # --------------------------------------------------------------------------- #
 #  Streamlit UI                                                               #
 # --------------------------------------------------------------------------- #
+# --------------------------------------------------------------------------- #
+#  Reference chart (verbatim from the Phoenix sampling guide)                 #
+# --------------------------------------------------------------------------- #
+CHART_SOIL = {
+ "Soil \u2014 Inorganics": [
+   ("28 days","Ammonia","4 oz. Glass jar"),
+   ("28 days","Chloride","4 oz. Glass jar"),
+   ("30 days","Chromium, (hexavalent)","4 oz. Glass jar"),
+   ("28 days","COD","4 oz. Glass jar"),
+   ("14 days","Cyanides","4 oz. Glass jar"),
+   ("28 days","Flashpoint","4 oz. Glass jar"),
+   ("6 months*","Metals, Total","4 oz. Glass jar"),
+   ("48 hr","Nitrate","4 oz. Glass jar"),
+   ("48 hr","Nitrite","4 oz. Glass jar"),
+   ("28 days","Nitrogen Tot-TKN","4 oz. Glass jar"),
+   ("28 days","Oil & Grease Or Petroleum HC","4 oz. Glass jar"),
+   ("IMMED","Ph","4 oz. Glass jar"),
+   ("28 days","Phenolics","4 oz. Glass jar"),
+   ("28 days","Phosphate Or Phosphorus","4 oz. Glass jar"),
+   ("7 days","Solids-Fixed","4 oz. Glass jar"),
+   ("7 days","Solids-Total","4 oz. Glass jar"),
+   ("7 days","Solids-Volatile","4 oz. Glass jar"),
+   ("28 days","Sulfate","4 oz. Glass jar"),
+   ("7 days","Sulfide","4 oz. Glass jar"),
+   ("14 days","TOC","4 oz. Glass jar"),
+   ("28 days","TOX Or EOX","4 oz. Glass jar"),
+ ],
+ "Soil \u2014 TCLP": [
+   ("6 months*","Metals","4 oz. Glass jar"),
+   ("14 (1)","Volatiles","25 gm ENCORE/4 oz. jar"),
+   ("14 (1)","Pesticides","4 oz. Glass jar"),
+   ("14 (1)","Semi Volatiles","4 oz. Glass jar"),
+   ("14 (1)","Herbicides","4 oz. Glass jar"),
+   ("as above","Full TCLP (Solid)","(1) 25 gm encore and (2) 8 oz. Glass jars"),
+ ],
+ "Soil \u2014 Petroleum": [
+   ("N/A","Age Dating","4 Glass jar"),
+   ("14 days","EPH","4 oz. Glass jar"),
+   ("14 days","EPH-(MA)","4 oz. Amber glass jar"),
+   ("14 days","ETPH","4 oz. Glass jar"),
+   ("14 days","TPH DRO","4 oz. Glass jar"),
+   ("14 days","TPH GRO","(2) 10mL methanol VOA"),
+   ("28 days","VPH","(2) 15mL methanol VOA"),
+ ],
+ "Soil \u2014 Organics (Soils/Solids/Oil/Solvents)": [
+   ("3 days","Formaldehyde","4 oz. Glass jar"),
+   ("14 days","Herbicides/Pesticides","4 oz. Glass jar"),
+   ("365 days","PCBs","4 oz. Glass jar"),
+   ("14 days","Semi Volatiles","4 oz. Glass jar"),
+   ("14 days","Volatiles","4 oz. Glass jar, (1) Methanol VOA, (2) DI water VOA **"),
+ ],
+}
+CHART_WATER = {
+ "Water \u2014 Inorganics": [
+   ("14 days","Alkalinity","As Is","120 ml/plastic, no headspace"),
+   ("28 days","Ammonia","H2SO4","250mL Plastic"),
+   ("24 hours","Bacteria (DW)","As Is","120mL Sterile plastic"),
+   ("6 hours","Bacteria (WW)","As Is","120mL Sterile plastic"),
+   ("48 hour","BOD","As Is","500mL Plastic"),
+   ("28 days","Bromide","As Is","100mL Plastic"),
+   ("28 days","Chloride","As Is","250mL Plastic"),
+   ("IMMED","Chlorine Residual","As Is","100mL Plastic"),
+   ("24 hr","Chromium, Hexavalent","As Is","250mL Plastic"),
+   ("28 days","COD","H2SO4","250mL Plastic"),
+   ("24 hr","Color","As Is","250mL Plastic"),
+   ("28 days","Conductance","As Is","100mL Plastic"),
+   ("14 days","Cyanide","NaOH","250mL Plastic"),
+   ("28 days","Flashpoint","As Is","250mL Plastic"),
+   ("28 days","Fluoride (ww)","As Is","500mL Plastic"),
+   ("6 months","Hardness","HNO3","100mL Plastic"),
+   ("48 hr","MBAS","As Is","500mL Plastic"),
+   ("28 days","Mercury","HNO3","250mL Plastic"),
+   ("6 months*","Metals, Dissolved (Field Filter)","HNO3","250mL Plastic"),
+   ("6 months*","Metals, Dissolved (Lab Filter)","As Is","250mL Plastic"),
+   ("6 months*","Metals, Total","HNO3","250mL Plastic"),
+   ("48 hr","Nitrate","As Is","250mL Plastic"),
+   ("28 days","Nitrate/Nitrite Combined","H2SO4","250mL Plastic"),
+   ("48 hr","Nitrite","As Is","250mL Plastic"),
+   ("28 days","Nitrogen, TOT-TKN","H2SO4","250mL Plastic"),
+   ("24 hr","Odor","As Is","100mL Plastic"),
+   ("48 hr","Odor (NY)","As Is","250mL Plastic"),
+   ("28 days","Oil & Grease","H2SO4","1000 ml/Amber"),
+   ("IMMED","Oxygen, Dissolved","As Is","300 ml/DO plastic w/cap & stopper"),
+   ("IMMED","Ph","As Is","100mL Plastic"),
+   ("28 days","Phenolics","H2SO4","8 oz. Amber"),
+   ("48 hr","Phosphate, Ortho","As Is","250mL Plastic"),
+   ("28 days","Phosphate, Phosphorus","H2SO4","250mL Plastic"),
+   ("7 days","Solids, Dissolved","As Is","100mL Plastic"),
+   ("48 hr","Solids, Settleable","As Is","(2)-1000 ml/plastic"),
+   ("7 days","Solids, Suspended","As Is","500mL Plastic"),
+   ("7 days","Solids, Total","As Is","100mL Plastic"),
+   ("7 days","Solids, Volatile","As Is","100mL Plastic"),
+   ("28 days","Sulfate","As Is","250mL Plastic"),
+   ("7 days","Sulfide","NaOH/Zinc Acetate","250mL Plastic"),
+   ("IMMED","Sulfite","As Is","100mL Plastic"),
+   ("28 days","TOC","H3PO4","8 oz. Amber Glass"),
+   ("28 days","TOX","H2SO4","8 oz. Amber Glass"),
+   ("48 hr","Turbidity","As Is","100mL Plastic"),
+   ("48 hr","UV 254","As Is","8 oz. Amber Glass"),
+   ("14 days","Volatile Fatty Acids","As Is or H2SO4","250mL Plastic or Glass"),
+ ],
+ "Water \u2014 TCLP": [
+   ("6 months*","Metals","As Is","500mL Plastic"),
+   ("14 days (1)","Volatiles","As Is","(4)-40mL VOA Vials"),
+   ("7 days (2)","Semi Volatiles","As Is","(2) 1L Amber Glass"),
+   ("7 days (2)","Pesticides","As Is","1L Amber Glass"),
+   ("7 days (2)","Herbicides","As Is","1L Amber Glass"),
+   ("as above","Full TCLP (Liquid)","As Is","(3) 1L Amber Glass, (1) 500mL plastic, (4) 40mL VOA Vials"),
+ ],
+ "Water \u2014 Petroleum": [
+   ("14 days","EPH","HCL","(2) 1L Amber Glass"),
+   ("7 days","ETPH","As Is","1L Amber Glass"),
+   ("7 days","TPH DRO","As Is","1L Amber Glass"),
+   ("14 days","TPH GRO","HCL","(2)-40mL VOA Vials"),
+   ("14 days","VPH","HCL","(2)-40mL VOA Vials"),
+ ],
+ "Water \u2014 Organics (Liquids)": [
+   ("14 days","1,4 Dioxane by method 8260","HCL","(3)-40mL VOA Vials"),
+   ("28 days","1,4 Dioxane Low Level 8270 Or 522***","NAHSO4","8 oz. Amber Glass"),
+   ("14 days","Alcohols","As Is","(2)-40mL VOA Vials"),
+   ("14 days","EDB/DBCP","As Is","(2)-40mL VOA Vials"),
+   ("3 days","Formaldehyde","As Is","8 oz. Amber Glass"),
+   ("14 days","Glycols","As Is","(2)-40mL VOA Vials"),
+   ("14 days","Haloacetic Acids (HAA5)","NH4CL","4 oz. Amber Glass"),
+   ("7 days","Herbicides","As Is","1L Amber Glass"),
+   ("14 days","Oxygenates","HCL","(3)-40mL VOA Vials"),
+   ("365 days","PCBs","As Is","1L Amber Glass"),
+   ("7 days","Pesticides","As Is","1L Amber Glass"),
+   ("7 days","Semi Volatiles","As Is","(2) 1L Amber Glass"),
+   ("14 days","THMs","Na2S2O3","(3)-40mL VOA Vials"),
+   ("14 days","Volatiles","HCL","(3)-40mL VOA Vials"),
+   ("14 days / 3 days","Volatiles (624) HCL / As is","HCL / As Is","(3)-40mL VOA Vials / (2)-40mL VOA Vials"),
+ ],
+}
+CHART_FOOTNOTES = [
+ "(1) 14-day hold for TCLP extraction",
+ "(2) 7-day hold for TCLP extraction",
+ "*** for Method 522, if chlorinated system the preservative includes Na2S2O3",
+ "** submit to lab within 48 hours of collection, or freeze",
+ "* 28 days for Mercury",
+]
+CHART_DOTS = {"HNO3": ("#d1202f", "#ffffff"), "H2SO4": ("#f2c200", "#333333"),
+              "HCL": ("#8f7fd4", "#ffffff"), "NAOH": ("#1f2f6e", "#ffffff"),
+              "NA2S2O3": ("#3aa0e0", "#ffffff")}
+
+
+def _chart_pres(text):
+    key = text.upper().replace(" ", "")
+    if key in CHART_DOTS:
+        bg, fg = CHART_DOTS[key]
+        return f'<span class="cdot" style="background:{bg};color:{fg};border-color:{bg}">{text}</span>'
+    return f'<span class="cplain">{text}</span>'
+
+
+def render_chart_html():
+    def soil_tbl(rows):
+        trs = "".join(f"<tr><td class='ch'>{h}</td><td class='ca'>{a}</td>"
+                      f"<td class='cc'>{c}</td></tr>" for h, a, c in rows)
+        return ("<table><thead><tr><th>Hold</th><th>Analysis</th>"
+                f"<th>Container</th></tr></thead><tbody>{trs}</tbody></table>")
+
+    def water_tbl(rows):
+        trs = "".join(f"<tr><td class='ch'>{h}</td><td class='ca'>{a}</td>"
+                      f"<td class='cp'>{_chart_pres(p)}</td><td class='cc'>{c}</td></tr>"
+                      for h, a, p, c in rows)
+        return ("<table><thead><tr><th>Hold</th><th>Analysis</th>"
+                f"<th>Preserv.</th><th>Container</th></tr></thead><tbody>{trs}</tbody></table>")
+
+    body = "<div class='cgrp'>SOIL</div>"
+    for title, rows in CHART_SOIL.items():
+        body += f"<div class='csec'>{title}</div>" + soil_tbl(rows)
+    body += "<div class='cgrp'>WATER</div>"
+    for title, rows in CHART_WATER.items():
+        body += f"<div class='csec'>{title}</div>" + water_tbl(rows)
+    foot = "".join(f"<div>{f}</div>" for f in CHART_FOOTNOTES)
+    keyline = " ".join(_chart_pres(x) for x in ("HNO3", "H2SO4", "HCL", "NaOH", "Na2S2O3"))
+    return f"""
+<style>
+.pchart{{font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;}}
+.pchart .cgrp{{font-family:Georgia,serif;color:#fff;background:#5f1a1c;
+   margin:16px 0 4px;font-size:16px;padding:5px 10px;border-radius:4px;letter-spacing:.5px;}}
+.pchart .csec{{font-family:Georgia,serif;color:#e8c9a0;font-weight:700;margin:12px 0 4px;font-size:14px;
+   border-bottom:1.5px solid #7a5a48;padding-bottom:2px;}}
+.pchart table{{width:100%;border-collapse:collapse;background:#fffdf8;margin-bottom:6px;
+   border:1px solid #c8b89a;font-size:12.5px;}}
+.pchart th{{background:#f3e9e3;color:#5f1a1c;text-align:left;padding:5px 7px;font-size:11px;
+   border:1px solid #c8b89a;}}
+.pchart td{{padding:5px 7px;border:1px solid #e6dcc8;vertical-align:middle;color:#211d18;}}
+.pchart td.ch{{color:#8a7f72;white-space:nowrap;font-size:11px;}}
+.pchart td.ca{{font-weight:600;color:#14346b;}}
+.pchart td.cc{{color:#5f1a1c;}}
+.pchart .cdot{{display:inline-block;padding:1px 8px;border-radius:10px;border:1.5px solid;
+   font-size:11px;font-weight:700;white-space:nowrap;}}
+.pchart .cplain{{display:inline-block;padding:1px 8px;border-radius:3px;border:1px solid #cbb;
+   background:#fff;color:#5f4a44;font-size:11px;font-weight:600;white-space:nowrap;}}
+.pchart .ckey{{background:#fffdf8;border:1px solid #c8b89a;border-radius:6px;padding:8px 12px;
+   margin-top:10px;font-size:11px;color:#4a4238;}}
+.pchart .cfn{{background:#fffdf8;border:1px solid #c8b89a;border-radius:6px;padding:8px 12px;
+   margin-top:10px;font-size:11px;color:#6a6055;line-height:1.6;}}
+</style>
+<div class="pchart">{body}
+<div class="ckey"><b>Label colors:</b> {keyline} &mdash; everything else is a plain printed label.</div>
+<div class="cfn">{foot}</div></div>
+"""
+
+
+
 st.set_page_config(page_title="Phoenix CoC Trainer", page_icon="🧪",
                    layout="centered", initial_sidebar_state="collapsed")
 st.markdown("""
@@ -778,7 +1000,7 @@ st.markdown("""
 
 st.markdown("# Phoenix CoC &amp; Bottle Trainer", unsafe_allow_html=True)
 init_quiz()
-mode = st.radio("Mode", ["🎲 CoC Generator", "🎯 Quiz"], horizontal=True,
+mode = st.radio("Mode", ["🎲 CoC Generator", "🎯 Quiz", "📋 Chart"], horizontal=True,
                 label_visibility="collapsed")
 
 # =========================== GENERATOR MODE ================================= #
@@ -821,7 +1043,7 @@ if mode == "🎲 CoC Generator":
         st.divider()
 
 # ============================== QUIZ MODE =================================== #
-else:
+elif mode == "🎯 Quiz":
     scope = st.session_state.get("qscope", "All")
     idxs = scope_indices(scope)
     stats = st.session_state.qstats
@@ -907,3 +1129,9 @@ else:
         st.write("")
         st.button("↺ Reset score & progress", on_click=reset_quiz,
                   use_container_width=True)
+
+# ============================== CHART MODE ================================== #
+else:
+    st.caption("Full Phoenix reference — exact wording from the sampling guide. "
+               "Colored dots are the five label colors you'll see in the binder.")
+    st.markdown(render_chart_html(), unsafe_allow_html=True)
