@@ -74,12 +74,15 @@ CONTAINER_CONTENTS = {
         "semi-volatiles, pesticides/PCBs, petroleum, and general soil chemistry. "
         "Pack it full with as little air as possible.",
     "soil_amber_jars":
-        "Amber glass soil jar used for certain light-sensitive petroleum work "
-        "(like Massachusetts EPH). The dark glass keeps light out.",
+        "Amber glass soil jar. It's specifically the container the Phoenix guide requires for "
+        "Massachusetts EPH \u2014 EPH-(MA) is the one soil test that calls for a 4 oz amber jar "
+        "(the dark glass also shields light-sensitive compounds).",
     "soil_voa_vials":
-        "Small plugs of soil for volatile chemicals (gasoline-type vapors). They "
-        "come pre-filled with methanol or water to lock the vapors in the moment "
-        "you add the soil.",
+        "Small plugs of soil for volatiles (VOCs) and gasoline-range petroleum. The Phoenix "
+        "guide lists these as 'Methanol VOA' and 'DI water VOA' \u2014 the 40 mL VOA-style vials "
+        "you fill in the field \u2014 pre-dosed so the vapors lock in the moment you add the soil. "
+        "That's why soil volatiles ride in VOA vials even though the guide never prints '40 mL' "
+        "under soil.",
     "pl_asis_bottles":
         "Water. Plain plastic bottles for general water chemistry, and — with the "
         "right preservative already added — for metals, nutrients, and cyanide.",
@@ -189,7 +192,9 @@ ANALYSIS_INFO = {
     "Soil EPH / TPH":
         "Oil and fuel content in soil at spill and tank sites; 4 oz clear glass jar.",
     "Soil EPH (Massachusetts)":
-        "The Massachusetts petroleum method — the one soil test Phoenix runs in an amber jar, to protect light-sensitive compounds.",
+        "Massachusetts' EPH petroleum method. Phoenix's sampling guide specifically requires a "
+        "4 oz amber glass jar for EPH-(MA) — that's the direct reason it's amber (it also shields "
+        "the light-sensitive compounds).",
     "Soil pH / Solids / General":
         "Basic soil properties used as background for the other results.",
     "TO-15 (VOCs in Air)":
@@ -567,6 +572,9 @@ FULL_CSS = """
 .fcoc td.bot small{display:block;font-weight:600;color:#8a5a1a;font-size:9px;}
 .fcoc .foot{font-size:10px;color:#8a7f72;padding:6px 12px;border-top:1px solid #c9b7a8;
             font-family:Arial,sans-serif;}
+.fcoc .mxkey{margin-top:6px;font-size:11px;line-height:1.55;color:#14346b;font-weight:600;
+             background:#eaf1ff;border:1px solid #b9cdf0;border-radius:5px;padding:6px 9px;}
+.fcoc .mxkey b{color:#5f1a1c;}
 </style>
 """
 
@@ -616,10 +624,11 @@ def render_full_coc_html(coc):
     </table>
   </div>
   <div class="foot">Bottle quantities entered per line, the way the lab requires.
-    Swipe the grid sideways to see all container columns.<br>
-    <b>Matrix:</b> DW=Drinking&nbsp;Water &middot; GW=Ground &middot; SW=Surface &middot;
-    STW=Storm &middot; WW=Waste &middot; RW=Raw &middot; S=Soil &middot; SD=Solid &middot;
-    SE=Sediment &middot; SL=Sludge &middot; X=Other</div>
+    Swipe the grid sideways to see all container columns.
+    <div class="mxkey"><b>Matrix codes &mdash;</b> DW=Drinking&nbsp;Water &middot; GW=Ground&nbsp;Water &middot;
+      SW=Surface&nbsp;Water &middot; STW=Storm&nbsp;Water &middot; WW=Waste&nbsp;Water &middot; RW=Raw&nbsp;Water &middot; S=Soil &middot;
+      SD=Solid &middot; SE=Sediment &middot; SL=Sludge &middot; X=Other</div>
+  </div>
 </div>
 """
 
@@ -774,7 +783,11 @@ def render_quiz_full(coc, reveal=False):
       <tbody>{body}</tbody>
     </table>
   </div>
-  <div class="foot">{foot}</div>
+  <div class="foot">{foot}
+    <div class="mxkey"><b>Matrix codes &mdash;</b> DW=Drinking&nbsp;Water &middot; GW=Ground&nbsp;Water &middot;
+      SW=Surface&nbsp;Water &middot; STW=Storm&nbsp;Water &middot; WW=Waste&nbsp;Water &middot; RW=Raw&nbsp;Water &middot; S=Soil &middot;
+      SD=Solid &middot; SE=Sediment &middot; SL=Sludge &middot; X=Other</div>
+  </div>
 </div>
 """
 
@@ -1044,9 +1057,10 @@ CHART_DESC = {
  "Age Dating": ("A petroleum 'fingerprinting' analysis that estimates how long ago a fuel or oil "
                 "release happened. Labs compare weathering patterns in the hydrocarbons. Used to "
                 "sort out liability in spill cases."),
- "EPH": _eph, "EPH-(MA)": ("The Massachusetts version of the EPH petroleum test, run to that "
-        "state's method. It measures diesel/oil-range petroleum. The soil version uses an amber jar "
-        "to protect light-sensitive compounds."),
+ "EPH": _eph, "EPH-(MA)": ("Massachusetts' version of the EPH petroleum test, measuring "
+        "diesel/oil-range petroleum. Phoenix's sampling guide specifically requires a 4 oz amber "
+        "glass jar for EPH-(MA) — that's the direct reason for the amber jar (it also shields "
+        "light-sensitive compounds)."),
  "ETPH": ("Extractable Total Petroleum Hydrocarbons \u2014 Connecticut's measure for the diesel/oil "
           "range. It quantifies how much heavier petroleum is present. Common at CT tank and spill "
           "sites."),
@@ -1162,19 +1176,22 @@ def _chart_pres(text):
 
 
 def render_chart_html():
-    def soil_tbl(rows):
-        trs = "".join(f"<tr><td class='ch'>{h}</td><td class='ca'>{a}</td>"
+    def soil_tbl(rows, pool):
+        trs = "".join(f"<tr><td class='ch'>{h}</td>"
+                      f"<td class='ca'>{a} <span class='cmx'>({pool[i % len(pool)]})</span></td>"
                       f"<td class='cc'>{c}</td>"
-                      f"<td class='cd'>{CHART_DESC.get(a, '')}</td></tr>" for h, a, c in rows)
+                      f"<td class='cd'>{CHART_DESC.get(a, '')}</td></tr>"
+                      for i, (h, a, c) in enumerate(rows))
         return ("<table><thead><tr><th>Hold</th><th>Analysis</th>"
                 "<th>Container</th><th>What it's for</th></tr></thead>"
                 f"<tbody>{trs}</tbody></table>")
 
-    def water_tbl(rows):
-        trs = "".join(f"<tr><td class='ch'>{h}</td><td class='ca'>{a}</td>"
+    def water_tbl(rows, pool):
+        trs = "".join(f"<tr><td class='ch'>{h}</td>"
+                      f"<td class='ca'>{a} <span class='cmx'>({pool[i % len(pool)]})</span></td>"
                       f"<td class='cp'>{_chart_pres(p)}</td><td class='cc'>{c}</td>"
                       f"<td class='cd'>{CHART_DESC.get(a, '')}</td></tr>"
-                      for h, a, p, c in rows)
+                      for i, (h, a, p, c) in enumerate(rows))
         return ("<table><thead><tr><th>Hold</th><th>Analysis</th>"
                 "<th>Preserv.</th><th>Container</th><th>What it's for</th></tr></thead>"
                 f"<tbody>{trs}</tbody></table>")
@@ -1197,16 +1214,30 @@ def render_chart_html():
       "<div class='cwhyr'><b>The 8 oz amber club</b> (TOC, TOX, Phenolics, HAA5, low-level "
       "dioxane) &rarr; <b>small amber glass</b></div>"
       "<div class='cwhyr'><b>Soil</b> = <b>4 oz glass jar</b> (amber jar only for MA petroleum)</div>"
-      "<div class='cwhynote'>Rule of thumb: metal name = plastic + red; fuel/solvent = vials; "
-      "everything else, let the quiz drill it in.</div>"
+      "<div class='cwhyh' style='margin-top:10px'>Rough odds by matrix</div>"
+      "<div class='cwhyr'><b>Water</b> (DW/GW/SW/STW/WW/RW): about <b>half are plastic</b>; the rest "
+      "split between VOA vials (fuel/volatile), 1 L amber, and small amber.</div>"
+      "<div class='cwhyr'><b>Soil</b> (S/SD/SE/SL): roughly <b>3 in 4 are the 4 oz clear jar</b>; "
+      "most of the rest are VOA vials (volatiles &amp; gasoline).</div>"
+      "<div class='cwhyr'><b>Bacteria</b> (DW/GW): always the sterile bottle. &nbsp;&bull;&nbsp; "
+      "<b>TCLP</b>: usually 1 L amber. &nbsp;&bull;&nbsp; <b>Air</b> (X): always a canister.</div>"
+      "<div class='cwhyr' style='color:#5f1a1c'><b>Heads-up:</b> soil volatiles &amp; gasoline "
+      "(GRO/VPH) DO ride in VOA-style vials \u2014 the methanol &amp; DI-water vials. The guide "
+      "just lists them as 'Methanol VOA / DI water VOA' instead of '40 mL,' which is why you never "
+      "see '40 mL' under soil.</div>"
+      "<div class='cwhynote'>Rough odds are by number of test types, not how often you'll actually "
+      "collect each \u2014 a starting guess, not a rule. The (CODE) after each analysis is just an "
+      "example matrix code &mdash; the same test can carry any code in its matrix (any water code, "
+      "any soil code, etc.).</div>"
       "</div>"
     )
     body = WHY + "<div class='cgrp'>SOIL</div>"
     for title, rows in CHART_SOIL.items():
-        body += f"<div class='csec'>{title}</div>" + soil_tbl(rows)
+        body += f"<div class='csec'>{title}</div>" + soil_tbl(rows, MATRIX_CODES["Soil"])
     body += "<div class='cgrp'>WATER</div>"
     for title, rows in CHART_WATER.items():
-        body += f"<div class='csec'>{title}</div>" + water_tbl(rows)
+        pool = MATRIX_CODES["TCLP"] if "TCLP" in title else MATRIX_CODES["Water"]
+        body += f"<div class='csec'>{title}</div>" + water_tbl(rows, pool)
     foot = "".join(f"<div>{f}</div>" for f in CHART_FOOTNOTES)
     keyline = " ".join(_chart_pres(x) for x in ("HNO3", "H2SO4", "HCL", "NaOH", "Na2S2O3"))
     return f"""
@@ -1230,6 +1261,8 @@ def render_chart_html():
 .pchart td{{padding:5px 7px;border:1px solid #e6dcc8;vertical-align:middle;color:#211d18;}}
 .pchart td.ch{{color:#8a7f72;white-space:nowrap;font-size:11px;}}
 .pchart td.ca{{font-weight:600;color:#14346b;}}
+.pchart .cmx{{color:#5f1a1c;font-weight:700;font-size:11px;background:#f3e9e3;
+   border-radius:4px;padding:0 4px;white-space:nowrap;}}
 .pchart td.cc{{color:#5f1a1c;}}
 .pchart td.cd{{color:#4a4238;font-size:11px;line-height:1.35;width:44%;}}
 .pchart th:last-child{{width:44%;}}
@@ -1321,7 +1354,8 @@ elif mode == "🎯 Quiz":
 
     # a real CoC with one line checked off (answer columns hidden)
     st.markdown(render_quiz_full(q["coc"], reveal=q["answered"]), unsafe_allow_html=True)
-    st.markdown(f"#### Which container for the ✓ line — **{name}** _({amx})_?")
+    row_code = next((r["matrix"] for r in q["coc"]["rows"] if r["checked"]), amx)
+    st.markdown(f"#### Which container for the ✓ line — **{name}** _({row_code})_?")
 
     if not q["answered"]:
         cols = st.columns(len(q["options"]))
