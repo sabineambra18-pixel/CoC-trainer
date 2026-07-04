@@ -924,6 +924,220 @@ CHART_DOTS = {"HNO3": ("#d1202f", "#ffffff"), "H2SO4": ("#f2c200", "#333333"),
               "NA2S2O3": ("#3aa0e0", "#ffffff")}
 
 
+# plain-English "what it's testing for" for each analysis on the chart
+_metals = ("Screens for metals such as lead, arsenic, and chromium. Many are toxic even at "
+           "low levels and can come from pipes, industry, or natural soil. Water samples are "
+           "acid-preserved so the metals stay dissolved until analysis.")
+_voc = ("Screens for volatile organic compounds \u2014 solvents and fuel chemicals like benzene "
+        "and TCE that evaporate easily. They're common near gas stations, dry cleaners, and "
+        "spills, and many are harmful. Collected with no air bubble so they can't escape.")
+_svoc = ("Screens for heavier organic pollutants that don't evaporate quickly, including PAHs "
+         "and many industrial chemicals. It's a broad scan used at contaminated sites. Several "
+         "of these compounds are toxic or cancer-causing.")
+_pest = ("Tests for bug-killer residues, including older persistent ones like DDT and chlordane. "
+         "They can wash off farmland or linger in soil for years. Many are toxic and tightly "
+         "regulated.")
+_herb = ("Tests for weed-killer residues such as 2,4-D. They come from farm and lawn runoff and "
+         "can reach water supplies. Several are health concerns in drinking water.")
+_pcb = ("Tests for PCBs \u2014 banned oily chemicals once used in electrical equipment. They "
+        "persist in soil and sediment for decades and build up in the food chain. Regulated as "
+        "probable carcinogens.")
+_ogr = ("Measures the total amount of oily and greasy material in the sample. It flags "
+        "contamination from petroleum, food processing, or industrial discharge. It doesn't "
+        "identify the specific oil, just how much is there.")
+_phen = ("Tests for phenol-type compounds, pollution indicators that often come from industrial "
+         "or petroleum discharge. They can cause taste-and-odor problems and are toxic at higher "
+         "levels.")
+_toc = ("Total Organic Carbon measures how much carbon-based material is dissolved in the water. "
+        "It's not a poison itself, but high TOC feeds bacteria and forms disinfection byproducts "
+        "when chlorinated. A common drinking-water and process check.")
+_tox = ("Measures total organic halogens \u2014 organic molecules carrying chlorine, bromine, or "
+        "iodine. It's a broad flag for man-made chlorinated contamination. Higher numbers suggest "
+        "industrial or solvent pollution.")
+_cod = ("Chemical Oxygen Demand estimates how much oxygen it would take to chemically break down "
+        "the organic matter in the sample. It's a fast gauge of how polluted wastewater is. "
+        "Higher numbers mean more organic contamination.")
+_ph = ("Measures how acidic or basic the sample is on the 0\u201314 scale. It affects corrosion, "
+       "metal solubility, and whether a waste is 'corrosive.' It's measured immediately because "
+       "it changes fast.")
+_flash = ("Measures the lowest temperature at which the sample gives off enough vapor to ignite. "
+          "It tells whether a waste is legally 'ignitable' and therefore hazardous. Common for "
+          "drums, solvents, and oily waste.")
+_cn = ("Tests for cyanide, a fast-acting poison that can come from metal plating, mining, or "
+       "industrial waste. Even low levels are dangerous, so it's tightly regulated. Base-preserved "
+       "to keep the cyanide stable.")
+_sulfide = ("Tests for sulfide, the 'rotten egg' smell compound. It's toxic, corrosive, and common "
+            "in wastewater and low-oxygen water. Preserved so the sulfide doesn't escape as gas.")
+_sulfate = ("Measures dissolved sulfate, a common natural salt. High levels taste bitter and can "
+            "have a laxative effect, and may indicate mining or industrial influence. A routine "
+            "general-chemistry test.")
+_ammonia = ("Measures ammonia-nitrogen, a form of nitrogen from sewage, fertilizer, or animal "
+            "waste. High levels are toxic to fish and signal pollution. A common wastewater and "
+            "surface-water check.")
+_chloride = ("Measures dissolved chloride (a salt). It's used to judge water quality and spot "
+             "road-salt, seawater, or wastewater influence. High chloride corrodes pipes and harms "
+             "freshwater life.")
+_cr6 = ("Tests for chromium-6, the toxic, cancer-causing form of chromium (the 'Erin Brockovich' "
+        "contaminant). It usually comes from industrial plating or manufacturing. It's regulated "
+        "far more strictly than ordinary chromium.")
+_nitrate = ("Measures nitrate, a nitrogen form usually from fertilizer, manure, or septic systems. "
+            "High nitrate in drinking water is dangerous for infants ('blue-baby syndrome'). Wells "
+            "are routinely tested for it.")
+_nitrite = ("Measures nitrite, a short-lived nitrogen form in the nitrogen cycle. It signals fresh "
+            "contamination or incomplete treatment. Usually run alongside nitrate.")
+_tkn = ("Total Kjeldahl Nitrogen measures organic nitrogen plus ammonia together. Combined with "
+        "nitrate/nitrite it gives 'total nitrogen,' a key nutrient-pollution measure. High values "
+        "point to sewage or fertilizer loading.")
+_phos = ("Measures phosphorus, a nutrient that in excess triggers algae blooms in lakes and "
+         "streams. It commonly comes from fertilizer, detergents, or wastewater. A core part of "
+         "nutrient testing.")
+_form = ("Tests for formaldehyde, an industrial chemical and preservative that irritates the lungs "
+         "and is a probable carcinogen. It can show up around manufacturing or certain wastes.")
+_eph = ("Extractable Petroleum Hydrocarbons measures the heavier, diesel-and-oil range of "
+        "petroleum. It's used to find and quantify fuel/oil contamination. Often paired with VPH "
+        "for the lighter range.")
+_tphgro = ("Total Petroleum Hydrocarbons in the Gasoline Range \u2014 measures lighter, gasoline-type "
+           "fuel. Because it's volatile, it's collected in sealed methanol/VOA vials. Common at gas "
+           "stations and fuel spills.")
+_vph = ("Volatile Petroleum Hydrocarbons \u2014 measures the lighter, gasoline-range petroleum "
+        "vapors. It's collected volatile-style (methanol/VOA). Often paired with EPH to cover the "
+        "full fuel range.")
+_solids = ("Measures how much solid material is in the water. Different versions look at what's "
+           "suspended, dissolved, or total. A basic water-quality and treatment measure.")
+_fulltclp = ("The complete TCLP suite \u2014 a leaching test that simulates whether a waste will "
+             "release metals and organic toxins into groundwater in a landfill. It bundles metals, "
+             "volatiles, semi-volatiles, pesticides, and herbicides. Results decide if a waste is "
+             "hazardous.")
+_dioxane = ("Tests for 1,4-dioxane, an industrial solvent stabilizer and stubborn groundwater "
+            "contaminant. It's a suspected carcinogen that's hard to remove with normal treatment.")
+
+CHART_DESC = {
+ # soil inorganics
+ "Ammonia": _ammonia, "Chloride": _chloride, "Chromium, (hexavalent)": _cr6,
+ "Chromium, Hexavalent": _cr6, "COD": _cod, "Cyanides": _cn, "Cyanide": _cn,
+ "Flashpoint": _flash, "Metals, Total": _metals, "Metals": _metals,
+ "Nitrate": _nitrate, "Nitrite": _nitrite, "Nitrogen Tot-TKN": _tkn, "Nitrogen, TOT-TKN": _tkn,
+ "Oil & Grease Or Petroleum HC": _ogr, "Oil & Grease": _ogr, "Ph": _ph, "Phenolics": _phen,
+ "Phosphate Or Phosphorus": _phos, "Phosphate, Phosphorus": _phos, "Phosphate, Ortho": _phos,
+ "Solids-Fixed": _solids, "Solids-Total": _solids, "Solids-Volatile": _solids,
+ "Sulfate": _sulfate, "Sulfide": _sulfide, "TOC": _toc, "TOX Or EOX": _tox, "TOX": _tox,
+ # tclp + organics
+ "Volatiles": _voc, "Pesticides": _pest, "Semi Volatiles": _svoc, "Herbicides": _herb,
+ "Herbicides/Pesticides": _pest, "PCBs": _pcb, "Formaldehyde": _form,
+ "Full TCLP (Solid)": _fulltclp, "Full TCLP (Liquid)": _fulltclp,
+ # petroleum
+ "Age Dating": ("A petroleum 'fingerprinting' analysis that estimates how long ago a fuel or oil "
+                "release happened. Labs compare weathering patterns in the hydrocarbons. Used to "
+                "sort out liability in spill cases."),
+ "EPH": _eph, "EPH-(MA)": ("The Massachusetts version of the EPH petroleum test, run to that "
+        "state's method. It measures diesel/oil-range petroleum. The soil version uses an amber jar "
+        "to protect light-sensitive compounds."),
+ "ETPH": ("Extractable Total Petroleum Hydrocarbons \u2014 Connecticut's measure for the diesel/oil "
+          "range. It quantifies how much heavier petroleum is present. Common at CT tank and spill "
+          "sites."),
+ "TPH DRO": ("Total Petroleum Hydrocarbons in the Diesel Range \u2014 measures diesel, heating oil, "
+             "and heavier fuel contamination. A standard cleanup-site measure. Paired with GRO to "
+             "cover gasoline too."),
+ "TPH GRO": _tphgro, "VPH": _vph,
+ # water inorganics
+ "Alkalinity": ("Measures the water's capacity to neutralize acid (mostly carbonates and "
+                "bicarbonates). It buffers pH swings and affects corrosion and treatment. A routine "
+                "general-chemistry parameter."),
+ "Bacteria (DW)": ("Tests drinking water for coliform and E. coli \u2014 indicators of contamination "
+                   "from human or animal waste. A positive result means the water may be unsafe. "
+                   "Collected sterile, often with thiosulfate to remove chlorine."),
+ "Bacteria (WW)": ("Tests wastewater for bacteria like coliforms to check treatment and "
+                   "disinfection. It confirms discharged water meets health limits. The short hold "
+                   "time means it must reach the lab fast."),
+ "BOD": ("Biochemical Oxygen Demand measures how much oxygen microbes use to break down organic "
+         "matter over 5 days. It shows how much organic pollution wastewater carries. A core "
+         "treatment-plant measure."),
+ "Bromide": ("Measures bromide, a natural salt ion. It matters because during disinfection it can "
+             "form harmful brominated byproducts. Also used to trace seawater or industrial "
+             "influence."),
+ "Chlorine Residual": ("Measures leftover disinfecting chlorine in treated water. Enough must remain "
+                       "to keep water safe through the pipes, but not so much it causes taste or "
+                       "byproduct problems. Measured immediately since chlorine fades fast."),
+ "Color": ("Measures the true color of the water, often from natural organics or industrial dyes. "
+           "It's an aesthetic quality parameter and can hint at organic loading."),
+ "Conductance": ("Measures how well the water carries electricity, which reflects dissolved-salt "
+                 "content. It's a quick proxy for overall mineral levels. Handy for spotting "
+                 "contamination or seawater intrusion."),
+ "Fluoride (ww)": ("Measures fluoride, beneficial for teeth at low levels but harmful in excess. "
+                   "Testing confirms it's within safe limits. Also relevant to some industrial "
+                   "discharges."),
+ "Hardness": ("Measures calcium and magnesium \u2014 the minerals that make water 'hard.' Hard water "
+              "causes scale in pipes and affects soap use. Acid-preserved because it's measured with "
+              "the metals."),
+ "MBAS": ("Measures detergent-type foaming agents (surfactants). Their presence signals detergent "
+          "or wastewater contamination. Often shows up as foaming in water."),
+ "Mercury": ("Tests specifically for mercury, a highly toxic metal that builds up in fish and the "
+             "food chain. It comes from industrial sources and some natural deposits. Regulated at "
+             "very low limits."),
+ "Metals, Dissolved (Field Filter)": ("Measures only the dissolved metals, with the sample filtered "
+             "in the field before preserving. Field filtering captures the truly dissolved fraction "
+             "before it changes. Used when the dissolved portion matters most."),
+ "Metals, Dissolved (Lab Filter)": ("Measures dissolved metals, but the filtering is done at the lab "
+             "instead of in the field. Same goal \u2014 the dissolved fraction \u2014 with a "
+             "different filtering step."),
+ "Nitrate/Nitrite Combined": ("Measures nitrate and nitrite together as total oxidized nitrogen. A "
+             "common nutrient and drinking-water screen. High values point to fertilizer or septic "
+             "influence."),
+ "Odor": ("Measures the threshold at which the water has a detectable smell. An aesthetic "
+          "drinking-water quality check. Odors can hint at organic or industrial contamination."),
+ "Odor (NY)": ("Measures detectable odor in water using New York's method. It's an aesthetic quality "
+               "check. Odors can point to organic or industrial contamination."),
+ "Oxygen, Dissolved": ("Measures the oxygen dissolved in water, essential for fish and aquatic life. "
+             "Low DO signals pollution or organic overloading. Measured immediately in a special "
+             "stoppered bottle because it changes fast."),
+ "Sulfite": ("Measures sulfite, often a leftover treatment chemical used to remove chlorine or "
+             "oxygen. Checked to confirm dosing and protect equipment. Measured quickly because it "
+             "reacts away."),
+ "Turbidity": ("Measures how cloudy the water is from suspended particles. It affects disinfection "
+               "and is a key drinking-water standard. Spikes can indicate contamination or treatment "
+               "problems."),
+ "UV 254": ("A quick optical test that shines UV light through the water to gauge dissolved organic "
+            "material. It correlates with disinfection-byproduct potential. A fast surrogate for "
+            "organic content."),
+ "Volatile Fatty Acids": ("Measures short-chain fatty acids that build up in digesters and "
+             "wastewater. They show how a biological or anaerobic treatment process is performing. "
+             "Rising levels can signal an upset process."),
+ "Solids, Dissolved": ("Measures the material dissolved in the water (salts and minerals that pass "
+             "through a filter). It reflects overall mineral content and water quality."),
+ "Solids, Settleable": ("Measures the portion of solids that settles to the bottom over time. Used "
+             "to judge wastewater-treatment performance."),
+ "Solids, Suspended": ("Measures the solid particles floating in the water (what a filter catches). "
+             "High levels make water cloudy and can smother aquatic life. A standard "
+             "wastewater-discharge measure."),
+ "Solids, Total": _solids, "Solids, Volatile": ("Splits solids into the part that burns off "
+             "(organic/volatile) versus the mineral part left behind. It shows how much of the "
+             "solids are organic. Useful for wastewater and sludge."),
+ # water organics
+ "1,4 Dioxane by method 8260": _dioxane + " This version uses the volatile (8260) method in "
+             "acid-preserved vials.",
+ "1,4 Dioxane Low Level 8270 Or 522***": _dioxane + " This is the trace-level method, collected in "
+             "a bisulfate-preserved amber bottle instead of a VOA vial.",
+ "Alcohols": ("Screens for alcohol compounds (like methanol or isopropanol) in water. These can come "
+              "from industrial processes or spills. Collected volatile-style since they evaporate."),
+ "EDB/DBCP": ("Tests for two old soil fumigants (EDB and DBCP) once used on crops. They can persist "
+              "in groundwater and are linked to cancer, so drinking water is screened for them."),
+ "Glycols": ("Tests for glycols such as antifreeze (ethylene/propylene glycol). They can contaminate "
+             "water from de-icing, spills, or industry. Collected volatile-style."),
+ "Haloacetic Acids (HAA5)": ("A group of five disinfection byproducts formed when chlorine reacts "
+             "with natural organic matter. They're regulated in drinking water because long-term "
+             "exposure is a health concern."),
+ "Oxygenates": ("Tests for fuel oxygenates like MTBE that were added to gasoline. They spread quickly "
+                "in groundwater and cause taste-and-odor problems. Common at gas-station "
+                "contamination sites."),
+ "THMs": ("Trihalomethanes are disinfection byproducts formed when chlorine meets natural organics. "
+          "They're regulated in drinking water due to long-term health risks. Samples are "
+          "dechlorinated to stop further formation."),
+ "Volatiles (624) HCL / As is": _voc + " This is the 624-method version; the preservative depends on "
+             "the specific list being run.",
+}
+
+
+
 def _chart_pres(text):
     key = text.upper().replace(" ", "")
     if key in CHART_DOTS:
@@ -935,16 +1149,20 @@ def _chart_pres(text):
 def render_chart_html():
     def soil_tbl(rows):
         trs = "".join(f"<tr><td class='ch'>{h}</td><td class='ca'>{a}</td>"
-                      f"<td class='cc'>{c}</td></tr>" for h, a, c in rows)
+                      f"<td class='cc'>{c}</td>"
+                      f"<td class='cd'>{CHART_DESC.get(a, '')}</td></tr>" for h, a, c in rows)
         return ("<table><thead><tr><th>Hold</th><th>Analysis</th>"
-                f"<th>Container</th></tr></thead><tbody>{trs}</tbody></table>")
+                "<th>Container</th><th>What it's for</th></tr></thead>"
+                f"<tbody>{trs}</tbody></table>")
 
     def water_tbl(rows):
         trs = "".join(f"<tr><td class='ch'>{h}</td><td class='ca'>{a}</td>"
-                      f"<td class='cp'>{_chart_pres(p)}</td><td class='cc'>{c}</td></tr>"
+                      f"<td class='cp'>{_chart_pres(p)}</td><td class='cc'>{c}</td>"
+                      f"<td class='cd'>{CHART_DESC.get(a, '')}</td></tr>"
                       for h, a, p, c in rows)
         return ("<table><thead><tr><th>Hold</th><th>Analysis</th>"
-                f"<th>Preserv.</th><th>Container</th></tr></thead><tbody>{trs}</tbody></table>")
+                "<th>Preserv.</th><th>Container</th><th>What it's for</th></tr></thead>"
+                f"<tbody>{trs}</tbody></table>")
 
     body = "<div class='cgrp'>SOIL</div>"
     for title, rows in CHART_SOIL.items():
@@ -969,6 +1187,8 @@ def render_chart_html():
 .pchart td.ch{{color:#8a7f72;white-space:nowrap;font-size:11px;}}
 .pchart td.ca{{font-weight:600;color:#14346b;}}
 .pchart td.cc{{color:#5f1a1c;}}
+.pchart td.cd{{color:#4a4238;font-size:11px;line-height:1.35;width:44%;}}
+.pchart th:last-child{{width:44%;}}
 .pchart .cdot{{display:inline-block;padding:1px 8px;border-radius:10px;border:1.5px solid;
    font-size:11px;font-weight:700;white-space:nowrap;}}
 .pchart .cplain{{display:inline-block;padding:1px 8px;border-radius:3px;border:1px solid #cbb;
