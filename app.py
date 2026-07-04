@@ -312,12 +312,24 @@ CITIES    = ["100 Sample Rd, Anytown, ST 00000", "1 Example Ave, Testville, ST 0
              "12 Mock St, Placeholderville, ST 00000"]
 
 PREFIX = {
-    "Water":    ["MW-", "GW-", "B-", "TB-", "DUP-", "SW-", "TAP-"],
-    "Soil":     ["SB-", "B-", "TP-", "SS-", "GP-"],
+    "Water":    ["MW-", "GW-", "SW-", "TAP-"],
+    "Soil":     ["SB-", "TP-", "SS-", "GP-"],
     "Bacteria": ["TAP-", "WELL-", "DW-", "KIT-"],
     "Air":      ["IA-", "SG-", "AA-", "SS-"],
-    "TCLP":     ["W-", "SB-", "B-", "TCLP-"],
+    "TCLP":     ["W-", "SB-", "TCLP-"],
 }
+# real Phoenix CoC matrix codes shown in the Matrix column (per category)
+MATRIX_CODES = {
+    "Water":    ["DW", "GW", "SW", "STW", "WW", "RW"],
+    "Soil":     ["S", "SD", "SE", "SL"],
+    "Bacteria": ["DW", "GW"],
+    "TCLP":     ["S", "SD", "GW", "WW"],
+    "Air":      ["X"],
+}
+
+
+def matrix_code(category):
+    return random.choice(MATRIX_CODES.get(category, ["X"]))
 MATRICES = ["All", "Water", "Soil", "Bacteria", "TCLP", "Air"]
 
 
@@ -356,7 +368,7 @@ def generate_coc(matrix="All", n=5):
         sid = f"{pfx}{counts[pfx]:02d}"
         t = (dt.datetime.combine(base_date, dt.time(8, 0))
              + dt.timedelta(minutes=random.randint(0, 480)))
-        row = {"n": i, "sample_id": sid, "matrix": row_mx, "time": t.strftime("%H:%M"),
+        row = {"n": i, "sample_id": sid, "matrix": matrix_code(row_mx), "time": t.strftime("%H:%M"),
                "analysis": name, "preservative": pres, "container_key": ckey,
                "qty": random.randint(1, 3)}
         if row_mx == "Air":
@@ -604,7 +616,10 @@ def render_full_coc_html(coc):
     </table>
   </div>
   <div class="foot">Bottle quantities entered per line, the way the lab requires.
-    Swipe the grid sideways to see all container columns.</div>
+    Swipe the grid sideways to see all container columns.<br>
+    <b>Matrix:</b> DW=Drinking&nbsp;Water &middot; GW=Ground &middot; SW=Surface &middot;
+    STW=Storm &middot; WW=Waste &middot; RW=Raw &middot; S=Soil &middot; SD=Solid &middot;
+    SE=Sediment &middot; SL=Sludge &middot; X=Other</div>
 </div>
 """
 
@@ -700,7 +715,7 @@ def make_quiz_coc(scope, forced_idx):
         counts[pfx] = counts.get(pfx, 0) + 1
         t = (dt.datetime.combine(base_date, dt.time(8, 0))
              + dt.timedelta(minutes=random.randint(0, 480)))
-        rows.append({"n": pos, "sample_id": f"{pfx}{counts[pfx]:02d}", "matrix": amx,
+        rows.append({"n": pos, "sample_id": f"{pfx}{counts[pfx]:02d}", "matrix": matrix_code(amx),
                      "time": t.strftime("%H:%M"), "analysis": aname,
                      "preservative": apres, "container_key": ackey,
                      "qty": random.randint(1, 3), "checked": ai == forced_idx})
@@ -1164,7 +1179,29 @@ def render_chart_html():
                 "<th>Preserv.</th><th>Container</th><th>What it's for</th></tr></thead>"
                 f"<tbody>{trs}</tbody></table>")
 
-    body = "<div class='cgrp'>SOIL</div>"
+    WHY = (
+      "<div class='cwhy'>"
+      "<div class='cwhyh'>How to remember which container</div>"
+      "<div class='cwhyr'><b>Metals</b> (Mercury, Lead, Arsenic, Chromium, Hardness) &rarr; "
+      "<b>plastic</b> + red HNO&#8323;</div>"
+      "<div class='cwhyr'><b>Cyanide</b> &rarr; <b>plastic</b> + navy NaOH</div>"
+      "<div class='cwhyr'><b>Salts / nutrients / general</b> (Nitrate, Chloride, Sulfate, "
+      "Ammonia, Alkalinity, Solids, Turbidity) &rarr; <b>plastic</b></div>"
+      "<div class='cwhyr'><b>Fuel / solvent / &lsquo;volatile&rsquo;</b> (VOCs, GRO, THMs, EDB, "
+      "dioxane-8260) &rarr; <b>40 mL VOA vials</b>, filled with no bubble</div>"
+      "<div class='cwhyr'><b>Trip Blank (TB)</b> &rarr; rides along with the volatile samples in "
+      "a <b>40 mL VOA vial</b> &mdash; clean lab water, never opened, checks for contamination "
+      "in transit</div>"
+      "<div class='cwhyr'><b>Big &lsquo;pour-a-lot&rsquo; organics</b> (Pesticides, PCBs, "
+      "Herbicides, Semi-Volatiles, EPH, Oil &amp; Grease) &rarr; <b>1 L amber glass</b></div>"
+      "<div class='cwhyr'><b>The 8 oz amber club</b> (TOC, TOX, Phenolics, HAA5, low-level "
+      "dioxane) &rarr; <b>small amber glass</b></div>"
+      "<div class='cwhyr'><b>Soil</b> = <b>4 oz glass jar</b> (amber jar only for MA petroleum)</div>"
+      "<div class='cwhynote'>Rule of thumb: metal name = plastic + red; fuel/solvent = vials; "
+      "everything else, let the quiz drill it in.</div>"
+      "</div>"
+    )
+    body = WHY + "<div class='cgrp'>SOIL</div>"
     for title, rows in CHART_SOIL.items():
         body += f"<div class='csec'>{title}</div>" + soil_tbl(rows)
     body += "<div class='cgrp'>WATER</div>"
@@ -1177,6 +1214,13 @@ def render_chart_html():
 .pchart{{font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;}}
 .pchart .cgrp{{font-family:Georgia,serif;color:#fff;background:#5f1a1c;
    margin:16px 0 4px;font-size:16px;padding:5px 10px;border-radius:4px;letter-spacing:.5px;}}
+.pchart .cwhy{{background:#fffdf8;border:1px solid #c8b89a;border-left:5px solid #5f1a1c;
+   border-radius:6px;padding:10px 12px;margin:6px 0 14px;}}
+.pchart .cwhyh{{font-family:Georgia,serif;color:#5f1a1c;font-weight:700;font-size:15px;
+   margin-bottom:6px;}}
+.pchart .cwhyr{{color:#211d18;font-size:12.5px;line-height:1.5;margin:3px 0;}}
+.pchart .cwhyr b{{color:#14346b;}}
+.pchart .cwhynote{{margin-top:8px;font-size:11.5px;color:#6a6055;font-style:italic;}}
 .pchart .csec{{font-family:Georgia,serif;color:#e8c9a0;font-weight:700;margin:12px 0 4px;font-size:14px;
    border-bottom:1.5px solid #7a5a48;padding-bottom:2px;}}
 .pchart table{{width:100%;border-collapse:collapse;background:#fffdf8;margin-bottom:6px;
